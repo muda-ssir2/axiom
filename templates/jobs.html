@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Jobs – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="glass-panel p-4 mb-4">
+        <div class="badge-pill-cyan mb-2">JOB DISCOVERY PORTAL</div>
+        <h1 class="display-6 fw-bold text-white mb-1">Discover Tech Opportunities</h1>
+        <p class="text-secondary small mb-4">Curated fresher and early-career roles from India&apos;s leading tech recruiters.</p>
+
+        <form method="get" action="{{ url_for('jobs.index') }}" class="row g-2" role="search">
+            <div class="col-lg-6">
+                <label for="q" class="visually-hidden">Search jobs</label>
+                <input type="search" id="q" name="q" value="{{ search_query }}" class="form-control" placeholder="Search by title, company or skill (e.g. Python, React)">
+            </div>
+            <div class="col-6 col-lg-2">
+                <label for="workplace" class="visually-hidden">Workplace type</label>
+                <select id="workplace" name="workplace" class="form-control">
+                    {% for w in ['All', 'Remote', 'Hybrid', 'Onsite'] %}
+                        <option value="{{ w }}" {% if selected_workplace == w %}selected{% endif %}>{{ 'Any workplace' if w == 'All' else w }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-6 col-lg-2">
+                <label for="experience" class="visually-hidden">Experience level</label>
+                <select id="experience" name="experience" class="form-control">
+                    {% for e in ['All', 'Fresher (0-1 yrs)', '1-3 yrs', '3-5 yrs'] %}
+                        <option value="{{ e }}" {% if selected_experience == e %}selected{% endif %}>{{ 'Any experience' if e == 'All' else e }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-lg-2 d-grid">
+                <button type="submit" class="btn btn-cyan"><i class="fa-solid fa-magnifying-glass me-1"></i> Search</button>
+            </div>
+            <input type="hidden" name="location" value="{{ selected_location }}">
+            <input type="hidden" name="category" value="{{ selected_category }}">
+        </form>
+
+        <div class="d-flex flex-wrap gap-2 mt-3" aria-label="Filter by location">
+            {% for loc in popular_locations %}
+                {% set active = (selected_location == loc) or (loc == 'All' and not selected_location) %}
+                <a href="{{ url_for('jobs.index', q=search_query, location=loc, category=selected_category, workplace=selected_workplace, experience=selected_experience) }}"
+                   class="btn btn-sm {% if active %}btn-cyan{% else %}btn-glass text-secondary{% endif %}">{{ loc }}</a>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <aside class="col-lg-3">
+            <div class="glass-card p-4">
+                <h2 class="text-white fw-bold small text-uppercase mb-3">Role Category</h2>
+                <nav class="d-flex flex-column gap-1" aria-label="Filter by category">
+                    <a href="{{ url_for('jobs.index', q=search_query, location=selected_location, workplace=selected_workplace, experience=selected_experience) }}"
+                       class="small py-1 {% if not selected_category or selected_category == 'All' %}text-cyan fw-semibold{% else %}text-secondary hover-cyan{% endif %}">All Categories</a>
+                    {% for cat in all_categories %}
+                        <a href="{{ url_for('jobs.index', q=search_query, location=selected_location, category=cat, workplace=selected_workplace, experience=selected_experience) }}"
+                           class="small py-1 {% if selected_category == cat %}text-cyan fw-semibold{% else %}text-secondary hover-cyan{% endif %}">{{ cat }}</a>
+                    {% endfor %}
+                </nav>
+            </div>
+        </aside>
+
+        <section class="col-lg-9" aria-live="polite">
+            <p class="text-secondary small mb-3">{{ total_results }} opening{{ '' if total_results == 1 else 's' }} found</p>
+
+            {% if jobs %}
+                <div class="d-flex flex-column gap-3">
+                    {% for job in jobs %}
+                        <article class="glass-card p-4">
+                            <div class="d-flex flex-column flex-md-row justify-content-between gap-3">
+                                <div class="d-flex gap-3">
+                                    <div class="rounded-3 d-flex align-items-center justify-content-center text-white fw-bold fs-5 flex-shrink-0" style="width: 52px; height: 52px; background: {{ job.company.logo_bg_color }};">
+                                        {{ job.company.logo_initials }}
+                                    </div>
+                                    <div>
+                                        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                            <h3 class="h5 fw-bold mb-0">
+                                                <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="text-white hover-cyan">{{ job.title }}</a>
+                                            </h3>
+                                            {% if job.is_featured %}<span class="badge-pill-teal small">Featured</span>{% endif %}
+                                        </div>
+                                        <div class="text-secondary small mb-2">
+                                            {{ job.company.name }} • <i class="fa-solid fa-location-dot"></i> {{ job.location }} • {{ job.workplace_type }} • {{ job.job_type }} • {{ job.experience_level }}
+                                        </div>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            {% for skill in job.skills_list[:5] %}
+                                                <span class="btn-glass text-secondary small px-2 py-1 rounded-pill">{{ skill }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-md-end d-flex flex-md-column justify-content-between align-items-md-end gap-2 flex-shrink-0">
+                                    <div class="text-success fw-bold">{{ job.salary_display }}</div>
+                                    <div class="d-flex gap-2">
+                                        {% if current_user.is_authenticated and not current_user.is_admin %}
+                                            <button type="button" class="btn btn-sm btn-save-job-ajax {% if job.id in saved_job_ids %}btn-cyan{% else %}btn-outline-cyan{% endif %}" data-job-id="{{ job.id }}" aria-label="Toggle bookmark for {{ job.title }}">
+                                                <i class="{% if job.id in saved_job_ids %}fas{% else %}far{% endif %} fa-bookmark"></i>
+                                            </button>
+                                        {% endif %}
+                                        {% if job.id in applied_job_ids %}
+                                            <span class="btn btn-sm btn-glass text-success disabled"><i class="fa-solid fa-check me-1"></i> Applied</span>
+                                        {% else %}
+                                            <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="btn btn-sm btn-cyan">View &amp; Apply</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="glass-card p-5 text-center">
+                    <i class="fa-solid fa-briefcase fs-1 text-muted mb-3"></i>
+                    <h3 class="h4 text-white fw-bold mb-2">No matching openings</h3>
+                    <p class="text-muted small mb-4">Try a broader keyword or clear some filters.</p>
+                    <a href="{{ url_for('jobs.index') }}" class="btn btn-cyan">Clear Filters</a>
+                </div>
+            {% endif %}
+        </section>
+    </div>
+</div>
+{% endblock %}
