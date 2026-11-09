@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}Candidate Cockpit – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">CANDIDATE COCKPIT</div>
+                <h1 class="display-6 fw-bold text-white mb-1">Welcome back, {{ current_user.name.split(' ')[0] }}</h1>
+                <p class="text-secondary small mb-0">{{ profile.headline or 'Aspiring Software Engineer' }} • {{ profile.college or '' }}</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="d-flex justify-content-between small mb-1">
+                    <span class="text-secondary">Profile strength</span>
+                    <span class="text-cyan fw-bold">{{ profile.completion_percentage }}%</span>
+                </div>
+                <div class="progress" style="height: 8px; background: rgba(255,255,255,.08);" role="progressbar" aria-label="Profile strength" aria-valuenow="{{ profile.completion_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                    <div class="progress-bar" style="width: {{ profile.completion_percentage }}%; background: linear-gradient(90deg, #06b6d4, #2dd4bf);"></div>
+                </div>
+                {% if profile.completion_percentage < 100 %}
+                    <a href="{{ url_for('student.profile') }}" class="small text-cyan d-inline-block mt-2">Complete your profile <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        {% set metrics = [
+            ('fa-file-signature', 'Applications', applications|length),
+            ('fa-bookmark', 'Saved Jobs', saved_jobs|length),
+            ('fa-stopwatch', 'Tests Taken', total_tests_taken),
+            ('fa-chart-simple', 'Avg. Score', avg_score ~ '%')
+        ] %}
+        {% for icon, label, value in metrics %}
+            <div class="col-6 col-lg-3">
+                <div class="glass-card p-4 h-100">
+                    <i class="fa-solid {{ icon }} text-cyan mb-2" aria-hidden="true"></i>
+                    <div class="fs-3 fw-bold text-white">{{ value }}</div>
+                    <div class="text-muted small">{{ label }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-5">
+            <div class="glass-card p-4 h-100">
+                <h2 class="h6 text-white fw-bold mb-3">Skill Diagnostic Radar</h2>
+                <div style="position: relative; height: 300px;">
+                    <canvas id="radarChart" role="img" aria-label="Radar chart of scores: {% for l in radar_labels %}{{ l }} {{ radar_values[loop.index0] }}%{% if not loop.last %}, {% endif %}{% endfor %}"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-7">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h6 text-white fw-bold mb-0">Recent Applications</h2>
+                    <a href="{{ url_for('student.applications') }}" class="small text-cyan">View all</a>
+                </div>
+                {% if applications %}
+                    <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
+                        {% for app in applications %}
+                            <li class="d-flex justify-content-between align-items-center gap-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-3 d-flex align-items-center justify-content-center text-white fw-bold small flex-shrink-0" style="width: 38px; height: 38px; background: {{ app.job.company.logo_bg_color }};">{{ app.job.company.logo_initials }}</div>
+                                    <div>
+                                        <a href="{{ url_for('jobs.details', job_id=app.job.id) }}" class="text-white small fw-semibold hover-cyan">{{ app.job.title }}</a>
+                                        <div class="text-muted small">{{ app.job.company.name }}</div>
+                                    </div>
+                                </div>
+                                <span class="badge-pill-cyan small text-nowrap">{{ app.status }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p class="text-muted small mb-3">You haven&apos;t applied to any roles yet.</p>
+                    <a href="{{ url_for('jobs.index') }}" class="btn btn-sm btn-cyan">Explore Jobs</a>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h6 text-white fw-bold mb-0">Recommended Mock Tests</h2>
+                    <a href="{{ url_for('preparation.aptitude') }}" class="small text-cyan">All tests</a>
+                </div>
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
+                    {% for test in upcoming_tests %}
+                        <li class="d-flex justify-content-between align-items-center gap-3">
+                            <div>
+                                <div class="text-white small fw-semibold">{{ test.title }}</div>
+                                <div class="text-muted small">{{ test.category }} • {{ test.duration_mins }} min • {{ test.difficulty }}</div>
+                            </div>
+                            <a href="{{ url_for('preparation.take_test', test_id=test.id) }}" class="btn btn-sm btn-outline-cyan text-nowrap">Start</a>
+                        </li>
+                    {% else %}
+                        <li class="text-muted small">No active tests right now.</li>
+                    {% endfor %}
+                </ul>
+                {% if recent_tests %}
+                    <h3 class="h6 text-white fw-bold mt-4 mb-2">Recent Results</h3>
+                    <ul class="list-unstyled mb-0 small">
+                        {% for r in recent_tests %}
+                            <li class="d-flex justify-content-between py-1 border-bottom border-secondary border-opacity-10">
+                                <span class="text-secondary">{{ r.test.title if r.test else 'Test' }}</span>
+                                <span class="fw-bold {% if r.passed %}text-success{% else %}text-warning{% endif %}">{{ r.percentage }}%</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-card p-4 h-100">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h2 class="h6 text-white fw-bold mb-0">Recommended Courses</h2>
+                    <a href="{{ url_for('preparation.courses') }}" class="small text-cyan">Browse</a>
+                </div>
+                <ul class="list-unstyled mb-0 d-flex flex-column gap-3">
+                    {% for course in recommended_courses %}
+                        <li class="d-flex align-items-center gap-3">
+                            <div class="rounded-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 38px; height: 38px; background: {{ course.badge_color }}22; color: {{ course.badge_color }};">
+                                <i class="fa-solid {{ course.icon }}" aria-hidden="true"></i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <a href="{{ url_for('preparation.course_detail', slug=course.slug) }}" class="text-white small fw-semibold hover-cyan">{{ course.title }}</a>
+                                <div class="text-muted small">{{ course.duration_hours }} hrs • <i class="fa-solid fa-star text-warning"></i> {{ course.rating }}</div>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="text-muted small">No courses available yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    (function () {
+        const canvas = document.getElementById('radarChart');
+        if (!canvas || typeof Chart === 'undefined') return;
+        new Chart(canvas, {
+            type: 'radar',
+            data: {
+                labels: {{ radar_labels|tojson }},
+                datasets: [{
+                    label: 'Score %',
+                    data: {{ radar_values|tojson }},
+                    backgroundColor: 'rgba(6, 182, 212, 0.18)',
+                    borderColor: '#22d3ee',
+                    pointBackgroundColor: '#22d3ee',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    r: {
+                        min: 0, max: 100,
+                        ticks: { display: false, stepSize: 20 },
+                        grid: { color: 'rgba(255,255,255,0.08)' },
+                        angleLines: { color: 'rgba(255,255,255,0.08)' },
+                        pointLabels: { color: '#cbd5e1', font: { size: 12 } }
+                    }
+                }
+            }
+        });
+    })();
+</script>
+{% endblock %}
