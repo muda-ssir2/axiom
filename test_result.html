@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block title %}Assessment Report: {{ test.title }} – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header Performance Banner -->
+    <div class="glass-card p-4 p-md-5 mb-4 text-center position-relative overflow-hidden" style="border-color: {% if result.passed %}rgba(16, 185, 129, 0.4){% else %}rgba(245, 158, 11, 0.4){% endif %};">
+        <div class="badge-pill-cyan mb-2">ASSESSMENT PERFORMANCE REPORT</div>
+        <h2 class="display-6 fw-bold text-white mb-2">{{ test.title }}</h2>
+
+        <div class="my-4">
+            {% if result.passed %}
+                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50 fs-5 px-4 py-2">
+                    <i class="fa-solid fa-circle-check me-2"></i> PASSED (Cutoff Cleared)
+                </span>
+            {% else %}
+                <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50 fs-5 px-4 py-2">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> BELOW CUTOFF (Needs Practice)
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="row g-4 justify-content-center max-w-800 mx-auto mt-2">
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded bg-secondary bg-opacity-10">
+                    <span class="text-muted small d-block">Score Earned</span>
+                    <span class="fs-4 fw-bold {% if result.passed %}text-success{% else %}text-warning{% endif %}">{{ result.score }} / {{ test.total_marks }}</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded bg-secondary bg-opacity-10">
+                    <span class="text-muted small d-block">Accuracy Percentage</span>
+                    <span class="fs-4 fw-bold text-cyan">{{ result.percentage }}%</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded bg-secondary bg-opacity-10">
+                    <span class="text-muted small d-block">Accuracy Breakdown</span>
+                    <span class="fs-4 fw-bold text-white">{{ result.correct_answers }}<span class="text-success small fs-6">✓</span> / {{ result.wrong_answers }}<span class="text-danger small fs-6">✗</span></span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="p-3 rounded bg-secondary bg-opacity-10">
+                    <span class="text-muted small d-block">Time Elapsed</span>
+                    <span class="fs-4 fw-bold text-white">{{ (result.time_taken_seconds // 60) }}m {{ (result.time_taken_seconds % 60) }}s</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 d-flex justify-content-center gap-3">
+            <a href="{{ url_for('preparation.take_test', test_id=test.id) }}" class="btn btn-outline-cyan">
+                <i class="fa-solid fa-rotate-right me-1"></i> Retake Test
+            </a>
+            <a href="{{ url_for('preparation.aptitude') }}" class="btn btn-cyan">
+                Back to Aptitude Hub
+            </a>
+        </div>
+    </div>
+
+    <!-- Solution Review & Explanations -->
+    <div class="glass-card p-4 p-md-5">
+        <h4 class="text-white fw-bold mb-4 d-flex align-items-center gap-2">
+            <i class="fa-solid fa-list-check text-cyan"></i> Detailed Question Solutions & Explanations
+        </h4>
+
+        <div class="d-flex flex-column gap-4">
+            {% for q in questions %}
+                {% set user_choice = user_choices.get(q.id|string, '') %}
+                {% set is_correct = (user_choice == q.correct_option) %}
+                {% set is_unanswered = (not user_choice) %}
+
+                <div class="p-4 rounded border {% if is_correct %}border-success border-opacity-50 bg-success bg-opacity-10{% elif is_unanswered %}border-secondary border-opacity-25 bg-secondary bg-opacity-10{% else %}border-danger border-opacity-50 bg-danger bg-opacity-10{% endif %}">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-bold text-white">Question {{ loop.index }}</span>
+                        <div>
+                            {% if is_correct %}
+                                <span class="badge bg-success"><i class="fa-solid fa-check me-1"></i> Correct (+{{ q.marks }} Marks)</span>
+                            {% elif is_unanswered %}
+                                <span class="badge bg-secondary"><i class="fa-solid fa-minus me-1"></i> Unanswered (0 Marks)</span>
+                            {% else %}
+                                <span class="badge bg-danger"><i class="fa-solid fa-xmark me-1"></i> Incorrect (-0.5 Marks)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <h6 class="text-white mb-3" style="line-height: 1.6;">{{ q.question_text }}</h6>
+
+                    <!-- Options Review Grid -->
+                    <div class="row g-2 mb-3">
+                        <div class="col-md-6">
+                            <div class="p-2 rounded small {% if q.correct_option == 'A' %}bg-success bg-opacity-25 border border-success text-white fw-bold{% elif user_choice == 'A' and not is_correct %}bg-danger bg-opacity-25 border border-danger text-white{% else %}bg-dark text-secondary{% endif %}">
+                                <b>A.</b> {{ q.option_a }}
+                                {% if q.correct_option == 'A' %}<i class="fa-solid fa-check text-success ms-2"></i>{% endif %}
+                                {% if user_choice == 'A' and not is_correct %}<span class="text-danger ms-2">(Your Choice)</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-2 rounded small {% if q.correct_option == 'B' %}bg-success bg-opacity-25 border border-success text-white fw-bold{% elif user_choice == 'B' and not is_correct %}bg-danger bg-opacity-25 border border-danger text-white{% else %}bg-dark text-secondary{% endif %}">
+                                <b>B.</b> {{ q.option_b }}
+                                {% if q.correct_option == 'B' %}<i class="fa-solid fa-check text-success ms-2"></i>{% endif %}
+                                {% if user_choice == 'B' and not is_correct %}<span class="text-danger ms-2">(Your Choice)</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-2 rounded small {% if q.correct_option == 'C' %}bg-success bg-opacity-25 border border-success text-white fw-bold{% elif user_choice == 'C' and not is_correct %}bg-danger bg-opacity-25 border border-danger text-white{% else %}bg-dark text-secondary{% endif %}">
+                                <b>C.</b> {{ q.option_c }}
+                                {% if q.correct_option == 'C' %}<i class="fa-solid fa-check text-success ms-2"></i>{% endif %}
+                                {% if user_choice == 'C' and not is_correct %}<span class="text-danger ms-2">(Your Choice)</span>{% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-2 rounded small {% if q.correct_option == 'D' %}bg-success bg-opacity-25 border border-success text-white fw-bold{% elif user_choice == 'D' and not is_correct %}bg-danger bg-opacity-25 border border-danger text-white{% else %}bg-dark text-secondary{% endif %}">
+                                <b>D.</b> {{ q.option_d }}
+                                {% if q.correct_option == 'D' %}<i class="fa-solid fa-check text-success ms-2"></i>{% endif %}
+                                {% if user_choice == 'D' and not is_correct %}<span class="text-danger ms-2">(Your Choice)</span>{% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Explanation Box -->
+                    {% if q.explanation %}
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 text-secondary small">
+                            <b class="text-cyan d-block mb-1"><i class="fa-solid fa-lightbulb me-1"></i> Solution Walkthrough:</b>
+                            {{ q.explanation }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

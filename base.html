@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AXIOMPATH – Career Preparation & Job Portal Platform{% endblock %}</title>
+    <meta name="description" content="Think Beyond. Get Hired. Prepare for campus placements, software engineering roles, and crack dream tech jobs with AXIOMPATH.">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Cyber/Dark Theme CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-axiom sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('main.index') }}">
+                <div class="brand-icon-box">
+                    <i class="fa-solid fa-compass"></i>
+                </div>
+                <span>AXIOM<span class="text-cyan">PATH</span></span>
+            </a>
+            
+            <button class="navbar-toggler border-0 text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarMain">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint and request.endpoint.startswith('jobs.') %}active{% endif %}" href="{{ url_for('jobs.index') }}">Explore Jobs</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle {% if request.endpoint and request.endpoint.startswith('preparation.') %}active{% endif %}" href="#" role="button" data-bs-toggle="dropdown">
+                            Preparation
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('preparation.aptitude') }}"><i class="fa-solid fa-brain text-cyan me-2"></i> Aptitude Tests</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('preparation.technical') }}"><i class="fa-solid fa-code text-cyan me-2"></i> Technical Tracks</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('preparation.interview') }}"><i class="fa-solid fa-user-tie text-cyan me-2"></i> Interview Preparation</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('preparation.mock_interview') }}"><i class="fa-solid fa-headset text-cyan me-2"></i> Mock Simulator</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('preparation.communication') }}"><i class="fa-solid fa-comments text-cyan me-2"></i> Communication & GD</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'preparation.courses' %}active{% endif %}" href="{{ url_for('preparation.courses') }}">Courses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint and request.endpoint.startswith('resume.') %}active{% endif %}" href="{{ url_for('resume.index') }}">Resume Builder</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}" href="{{ url_for('main.about') }}">About Us</a>
+                    </li>
+                </ul>
+                
+                <div class="d-flex align-items-center gap-2">
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.is_admin %}
+                            <a href="{{ url_for('admin.dashboard') }}" class="btn badge-pill-cyan me-2">
+                                <i class="fa-solid fa-shield-halved"></i> Admin Portal
+                            </a>
+                        {% endif %}
+                        <div class="dropdown">
+                            <button class="btn btn-glass dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
+                                <div class="rounded-circle bg-cyan text-dark d-flex align-items-center justify-content-center fw-bold" style="width: 28px; height: 28px; font-size: 0.8rem; background: #06b6d4;">
+                                    {{ current_user.name[:1] }}
+                                </div>
+                                <span class="d-none d-md-inline">{{ current_user.name.split()[0] }}</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><h6 class="dropdown-header text-muted">{{ current_user.email }}</h6></li>
+                                <li><a class="dropdown-item" href="{{ url_for('student.dashboard') }}"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('student.profile') }}"><i class="fa-solid fa-id-badge me-2"></i> My Profile</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('student.applications') }}"><i class="fa-solid fa-file-signature me-2"></i> Applications</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('student.saved_jobs') }}"><i class="fa-solid fa-bookmark me-2"></i> Saved Jobs</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('student.settings') }}"><i class="fa-solid fa-sliders me-2"></i> Settings</a></li>
+                                <li><hr class="dropdown-divider border-secondary opacity-25"></li>
+                                <li><a class="dropdown-item text-danger" href="{{ url_for('auth.logout') }}"><i class="fa-solid fa-arrow-right-from-bracket me-2"></i> Sign Out</a></li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="btn btn-glass">Log In</a>
+                        <a href="{{ url_for('auth.register') }}" class="btn btn-cyan">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Message Container -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show glass-card border-0 mb-3 text-white" role="alert" style="background: rgba(15, 23, 42, 0.95); border-left: 4px solid var(--cyan-primary) !important;">
+                        <div class="d-flex align-items-center gap-2">
+                            {% if category == 'success' %}
+                                <i class="fa-solid fa-circle-check text-success fs-5"></i>
+                            {% elif category == 'danger' or category == 'error' %}
+                                <i class="fa-solid fa-circle-exclamation text-danger fs-5"></i>
+                            {% elif category == 'warning' %}
+                                <i class="fa-solid fa-triangle-exclamation text-warning fs-5"></i>
+                            {% else %}
+                                <i class="fa-solid fa-circle-info text-info fs-5"></i>
+                            {% endif %}
+                            <div>{{ message }}</div>
+                        </div>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Body Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Professional Footer -->
+    <footer class="footer-axiom">
+        <div class="container">
+            <div class="row g-4 mb-5">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center gap-2 mb-3">
+                        <div class="brand-icon-box" style="width: 32px; height: 32px; font-size: 0.95rem;">
+                            <i class="fa-solid fa-compass"></i>
+                        </div>
+                        <span class="fs-4 fw-bold text-white">AXIOM<span class="text-cyan">PATH</span></span>
+                    </div>
+                    <p class="text-muted pe-lg-4">
+                        "Think Beyond. Get Hired." <br>
+                        India's futuristic career acceleration platform empowering collegiate talent to master aptitude, ace tech interviews, build production-grade resumes, and land dream placements.
+                    </p>
+                    <div class="d-flex gap-3 text-muted fs-5 mt-3">
+                        <a href="https://linkedin.com" class="text-muted hover-cyan"><i class="fa-brands fa-linkedin"></i></a>
+                        <a href="https://github.com" class="text-muted hover-cyan"><i class="fa-brands fa-github"></i></a>
+                        <a href="https://twitter.com" class="text-muted hover-cyan"><i class="fa-brands fa-x-twitter"></i></a>
+                        <a href="https://discord.com" class="text-muted hover-cyan"><i class="fa-brands fa-discord"></i></a>
+                        <a href="https://youtube.com" class="text-muted hover-cyan"><i class="fa-brands fa-youtube"></i></a>
+                    </div>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="text-white fw-bold mb-3 text-uppercase small letter-spacing-1">Preparation</h6>
+                    <a href="{{ url_for('preparation.aptitude') }}" class="footer-link">Quantitative Aptitude</a>
+                    <a href="{{ url_for('preparation.aptitude') }}" class="footer-link">Logical Reasoning</a>
+                    <a href="{{ url_for('preparation.technical') }}" class="footer-link">Python & DSA Track</a>
+                    <a href="{{ url_for('preparation.technical') }}" class="footer-link">DBMS & SQL Blueprint</a>
+                    <a href="{{ url_for('preparation.interview') }}" class="footer-link">HR STAR Framework</a>
+                    <a href="{{ url_for('preparation.mock_interview') }}" class="footer-link">Mock Simulator</a>
+                </div>
+                
+                <div class="col-lg-2 col-md-6 col-6">
+                    <h6 class="text-white fw-bold mb-3 text-uppercase small letter-spacing-1">Platform</h6>
+                    <a href="{{ url_for('jobs.index') }}" class="footer-link">Explore Opportunities</a>
+                    <a href="{{ url_for('resume.index') }}" class="footer-link">Live Resume Builder</a>
+                    <a href="{{ url_for('preparation.courses') }}" class="footer-link">Placement Courses</a>
+                    <a href="{{ url_for('main.pricing') }}" class="footer-link">Pricing Plans</a>
+                    <a href="{{ url_for('main.about') }}" class="footer-link">Our Mission</a>
+                    <a href="{{ url_for('main.contact') }}" class="footer-link">Contact Support</a>
+                </div>
+                
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="text-white fw-bold mb-3 text-uppercase small letter-spacing-1">Weekly Placement Dispatch</h6>
+                    <p class="text-muted small">Subscribe to receive high-frequency interview questions, recruitment drive alerts, and salary benchmarks directly in your inbox.</p>
+                    <form class="d-flex gap-2" onsubmit="event.preventDefault(); alert('Subscribed successfully to AXIOMPATH Placement Dispatch!');">
+                        <input type="email" class="form-control" placeholder="Enter student email..." required>
+                        <button type="submit" class="btn btn-cyan px-3">Join</button>
+                    </form>
+                    <div class="mt-3 text-muted small">
+                        <i class="fa-solid fa-lock text-cyan me-1"></i> Zero spam. Strictly career-accelerating insights.
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="border-secondary opacity-25 mb-4">
+            
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 text-muted small">
+                <div>
+                    © 2026 AXIOMPATH Technologies Pvt. Ltd. All rights reserved.
+                </div>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('main.privacy') }}" class="text-muted hover-cyan">Privacy Policy</a>
+                    <a href="{{ url_for('main.terms') }}" class="text-muted hover-cyan">Terms of Service</a>
+                    <a href="{{ url_for('main.faq') }}" class="text-muted hover-cyan">FAQ</a>
+                    <a href="{{ url_for('main.contact') }}" class="text-muted hover-cyan">Security</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Custom Application JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

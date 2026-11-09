@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Sign In – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-5 my-md-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="brand-icon-box mx-auto mb-3" style="width: 44px; height: 44px; font-size: 1.3rem;">
+                        <i class="fa-solid fa-compass"></i>
+                    </div>
+                    <h3 class="fw-bold text-white mb-1">Welcome Back</h3>
+                    <p class="text-muted small">Sign in to your AXIOMPATH candidate account</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label" for="email">Email Address</label>
+                        {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), id="email", placeholder="you@university.edu") }}
+                        {% for err in form.email.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label class="form-label mb-0" for="password">Password</label>
+                            <a href="#" class="small text-cyan text-decoration-none" onclick="alert('Password reset link simulated to your registered email.'); return false;">Forgot?</a>
+                        </div>
+                        {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), id="password", placeholder="••••••••") }}
+                        {% for err in form.password.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        {{ form.remember(class="form-check-input", id="remember") }}
+                        <label class="form-check-label text-muted small" for="remember">Keep me logged in for 30 days</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-cyan w-100 py-2 fs-6">
+                        <i class="fa-solid fa-arrow-right-to-bracket me-2"></i> Sign In to Dashboard
+                    </button>
+                </form>
+
+                <!-- Quick Testing Demo Login Buttons -->
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-25">
+                    <div class="text-muted small text-center mb-2">⚡ Quick 1-Click Demo Login:</div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-glass btn-sm w-100 text-cyan" onclick="fillCredentials('rahul.sharma@axiompath.com', 'Student@123')">
+                            <i class="fa-solid fa-user-graduate me-1"></i> Demo Student
+                        </button>
+                        <button type="button" class="btn btn-glass btn-sm w-100 text-warning" onclick="fillCredentials('admin@axiompath.com', 'Admin@123')">
+                            <i class="fa-solid fa-shield-halved me-1"></i> Demo Admin
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4 text-muted small">
+                    Don't have an account yet? 
+                    <a href="{{ url_for('auth.register') }}" class="text-cyan fw-semibold">Sign up free</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function fillCredentials(email, password) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = password;
+}
+</script>
+{% endblock %}

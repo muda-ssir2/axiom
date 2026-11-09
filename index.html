@@ -1,0 +1,590 @@
+{% extends "base.html" %}
+
+{% block title %}AXIOMPATH – Think Beyond. Get Hired.{% endblock %}
+
+{% block content %}
+<!-- Ambient Background Glows -->
+<div class="hero-glow-1"></div>
+<div class="hero-glow-2"></div>
+
+<!-- HERO SECTION -->
+<section class="hero-section text-center text-lg-start position-relative">
+    <div class="container">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-6">
+                <div class="badge-pill-cyan mb-3">
+                    <i class="fa-solid fa-sparkles"></i> NEXT-GEN CAREER ACCELERATION
+                </div>
+                <h1 class="display-4 fw-extrabold text-white mb-3">
+                    Your Career Doesn't Happen <br>
+                    <span class="text-gradient-cyan">By Chance.</span>
+                </h1>
+                <p class="lead text-secondary mb-4">
+                    Build the skills, confidence and experience that turn your career ambitions into real opportunities. Master aptitude, practice real coding rounds, build ATS-grade resumes and get hired by high-growth startups and tech leaders.
+                </p>
+                <div class="d-flex flex-wrap gap-3 justify-content-center justify-content-lg-start mb-4">
+                    <a href="{{ url_for('preparation.aptitude') }}" class="btn btn-cyan btn-lg px-4">
+                        <i class="fa-solid fa-bolt"></i> Start Preparing
+                    </a>
+                    <a href="{{ url_for('jobs.index') }}" class="btn btn-outline-cyan btn-lg px-4">
+                        <i class="fa-solid fa-magnifying-glass"></i> Explore Opportunities
+                    </a>
+                </div>
+                <div class="d-flex align-items-center gap-3 justify-content-center justify-content-lg-start text-muted small">
+                    <div class="d-flex">
+                        <div class="rounded-circle bg-info border border-dark text-white fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.75rem;">RS</div>
+                        <div class="rounded-circle bg-primary border border-dark text-white fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.75rem; margin-left: -10px;">PN</div>
+                        <div class="rounded-circle bg-success border border-dark text-white fw-bold d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; font-size: 0.75rem; margin-left: -10px;">MK</div>
+                    </div>
+                    <span>Over <b>2,800+</b> candidates placed in Top Tech & SaaS this year</span>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <!-- Animated Cockpit Dashboard Mockup -->
+                <div class="mockup-window">
+                    <div class="mockup-header justify-content-between">
+                        <div class="d-flex align-items-center gap-2">
+                            <span class="mockup-dot dot-red"></span>
+                            <span class="mockup-dot dot-yellow"></span>
+                            <span class="mockup-dot dot-green"></span>
+                            <span class="text-muted ms-2 small font-mono">axiompath.app/student/cockpit</span>
+                        </div>
+                        <span class="badge bg-dark text-cyan font-mono small border border-secondary border-opacity-25">LIVE ASSESSMENT</span>
+                    </div>
+                    <div class="p-4 bg-dark">
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <div class="glass-card p-3 border-0 bg-secondary bg-opacity-10">
+                                    <div class="text-muted small">Placement Readiness</div>
+                                    <div class="fs-3 fw-bold text-cyan">92.4%</div>
+                                    <div class="progress mt-2" style="height: 6px; background: rgba(255,255,255,0.05);">
+                                        <div class="progress-bar bg-cyan" style="width: 92%;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="glass-card p-3 border-0 bg-secondary bg-opacity-10">
+                                    <div class="text-muted small">Target Package</div>
+                                    <div class="fs-3 fw-bold text-success">₹16.5 LPA</div>
+                                    <div class="small text-muted mt-1"><i class="fa-solid fa-arrow-trend-up text-success"></i> +35% vs Average</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="glass-card p-3 mb-3 border-0 bg-secondary bg-opacity-10">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="fw-semibold small text-white"><i class="fa-solid fa-code text-cyan me-2"></i> DSA Mock Simulation (Two Pointers)</span>
+                                <span class="badge bg-success bg-opacity-25 text-success small">Passed 14/14 Tests</span>
+                            </div>
+                            <div class="font-mono small p-2 rounded" style="background: #050811; color: #a5f3fc;">
+                                <code>def maxWaterContainer(heights: list) -> int:</code><br>
+                                <span class="text-muted ps-3"># Optimal O(N) Two-Pointer convergence</span><br>
+                                <span class="text-cyan ps-3">return max_area</span>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center text-muted small pt-1">
+                            <span><i class="fa-solid fa-check-double text-cyan me-1"></i> Aptitude Speed: 42s / Q</span>
+                            <span><i class="fa-solid fa-star text-warning me-1"></i> Top 5% Percentile</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 1: TRUSTED BY ASPIRING PROFESSIONALS & RECRUITERS -->
+<section class="py-5 border-top border-bottom border-secondary border-opacity-10">
+    <div class="container text-center">
+        <p class="text-muted text-uppercase small letter-spacing-1 mb-4">
+            Graduates Prepared by AXIOMPATH are Hired by India's Top Innovators
+        </p>
+        <div class="d-flex flex-wrap justify-content-center align-items-center gap-4 gap-md-5 opacity-75">
+            <span class="fs-5 fw-bold text-white"><i class="fa-brands fa-amazon text-warning me-1"></i> Amazon</span>
+            <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-bolt text-cyan me-1"></i> Razorpay</span>
+            <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-utensils text-warning me-1"></i> Swiggy</span>
+            <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-gem text-white me-1"></i> CRED</span>
+            <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-building text-info me-1"></i> TCS Digital</span>
+            <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-microchip text-primary me-1"></i> Infosys</span>
+            <span class="fs-5 fw-bold text-white"><i class="fa-solid fa-layer-group text-danger me-1"></i> Zomato</span>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 2: OUR PREPARATION PROGRAMS -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <div class="badge-pill-cyan mb-2">COMPLETE ECOSYSTEM</div>
+            <h2 class="display-6 fw-bold text-white">Engineered For Every Placement Round</h2>
+            <p class="text-secondary">From day-zero aptitude screening to machine coding rounds and executive behavioral interviews.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="mb-3 d-inline-flex p-3 rounded-3" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee;">
+                        <i class="fa-solid fa-calculator fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Aptitude Mastery</h5>
+                    <p class="text-muted small mb-4">
+                        Practice Quantitative, Logical Reasoning, and Verbal Ability under real countdown timers with instant detailed solution breakdowns.
+                    </p>
+                    <a href="{{ url_for('preparation.aptitude') }}" class="text-cyan fw-semibold small text-decoration-none">
+                        Take Aptitude Tests <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="mb-3 d-inline-flex p-3 rounded-3" style="background: rgba(16, 185, 129, 0.15); color: #34d399;">
+                        <i class="fa-solid fa-code-merge fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Technical Tracks</h5>
+                    <p class="text-muted small mb-4">
+                        Deep-dive into Python, DSA, DBMS & SQL, Operating Systems, Computer Networks, and System Architecture with live code snippets.
+                    </p>
+                    <a href="{{ url_for('preparation.technical') }}" class="text-cyan fw-semibold small text-decoration-none">
+                        Explore Tech Modules <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="mb-3 d-inline-flex p-3 rounded-3" style="background: rgba(139, 92, 246, 0.15); color: #c084fc;">
+                        <i class="fa-solid fa-headset fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Interview Simulator</h5>
+                    <p class="text-muted small mb-4">
+                        STAR framework breakdown, high-frequency technical questions, and company-specific interview packs for TCS, Infosys, and Razorpay.
+                    </p>
+                    <a href="{{ url_for('preparation.interview') }}" class="text-cyan fw-semibold small text-decoration-none">
+                        Crack The Interview <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="glass-card p-4 h-100 position-relative overflow-hidden">
+                    <div class="mb-3 d-inline-flex p-3 rounded-3" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">
+                        <i class="fa-solid fa-file-invoice fs-4"></i>
+                    </div>
+                    <h5 class="fw-bold text-white mb-2">Resume Engineering</h5>
+                    <p class="text-muted small mb-4">
+                        Build an ATS-optimized, recruiter-approved technical resume with live interactive preview and instant one-click PDF export.
+                    </p>
+                    <a href="{{ url_for('resume.index') }}" class="text-cyan fw-semibold small text-decoration-none">
+                        Build My Resume <i class="fa-solid fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3: POPULAR CAREER TRACKS -->
+<section class="py-5 bg-darker">
+    <div class="container py-4">
+        <div class="row align-items-end mb-5">
+            <div class="col-md-8">
+                <div class="badge-pill-cyan mb-2">IN-DEMAND SPECIALIZATIONS</div>
+                <h2 class="display-6 fw-bold text-white">Curated Placement Pathways</h2>
+                <p class="text-secondary mb-0">Follow structured tracks designed around the exact hiring requirements of 2026 tech employers.</p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                <a href="{{ url_for('preparation.courses') }}" class="btn btn-outline-cyan">View All Pathways</a>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #06b6d4 !important;">
+                    <div class="badge bg-cyan bg-opacity-25 text-cyan mb-3 small">High Hiring Volume</div>
+                    <h5 class="text-white fw-bold">Full Stack Engineer</h5>
+                    <p class="text-muted small">Python, Flask/Django, React, PostgreSQL, Docker, RESTful APIs.</p>
+                    <div class="border-top border-secondary border-opacity-10 pt-3 mt-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Avg. Package</span>
+                        <span class="fw-bold text-cyan">₹9 - ₹18 LPA</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #10b981 !important;">
+                    <div class="badge bg-success bg-opacity-25 text-success mb-3 small">Fastest Growing</div>
+                    <h5 class="text-white fw-bold">Data & AI Engineer</h5>
+                    <p class="text-muted small">Python, PyTorch, SQL, Spark, Feature Engineering, FastApi.</p>
+                    <div class="border-top border-secondary border-opacity-10 pt-3 mt-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Avg. Package</span>
+                        <span class="fw-bold text-success">₹10 - ₹22 LPA</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #8b5cf6 !important;">
+                    <div class="badge bg-purple bg-opacity-25 text-purple mb-3 small" style="color: #c084fc;">Enterprise Demand</div>
+                    <h5 class="text-white fw-bold">Backend & Distributed</h5>
+                    <p class="text-muted small">Java Spring Boot / Golang, Redis, Kafka, Microservices, System Design.</p>
+                    <div class="border-top border-secondary border-opacity-10 pt-3 mt-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Avg. Package</span>
+                        <span class="fw-bold text-purple" style="color: #c084fc;">₹12 - ₹24 LPA</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #f59e0b !important;">
+                    <div class="badge bg-warning bg-opacity-25 text-warning mb-3 small">Product Centric</div>
+                    <h5 class="text-white fw-bold">Product & QA Analyst</h5>
+                    <p class="text-muted small">Advanced SQL, A/B Testing, Python Analytics, Selenium, PyTest.</p>
+                    <div class="border-top border-secondary border-opacity-10 pt-3 mt-3 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Avg. Package</span>
+                        <span class="fw-bold text-warning">₹8 - ₹15 LPA</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4: LATEST JOB OPPORTUNITIES -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4 gap-3">
+            <div>
+                <div class="badge-pill-cyan mb-2">VERIFIED RECRUITMENT DRIVES</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Featured Campus & Fresher Openings</h2>
+                <p class="text-secondary mb-0">Apply with your AXIOMPATH resume in one click.</p>
+            </div>
+            <a href="{{ url_for('jobs.index') }}" class="btn btn-outline-cyan">
+                View All {{ stats.active_openings }} Jobs <i class="fa-solid fa-arrow-right ms-1"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            {% for job in featured_jobs %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="glass-card p-4 h-100 d-flex flex-direction-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-3 d-flex align-items-center justify-content-center fw-bold text-white" style="width: 44px; height: 44px; background: {{ job.company.logo_bg_color }};">
+                                        {{ job.company.logo_initials }}
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-0">{{ job.company.name }}</h6>
+                                        <span class="text-muted small"><i class="fa-solid fa-location-dot me-1"></i> {{ job.location }}</span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-secondary bg-opacity-25 text-cyan border border-cyan border-opacity-25 small">{{ job.job_type }}</span>
+                            </div>
+                            
+                            <h5 class="text-white fw-bold mb-2">
+                                <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="text-white hover-cyan">{{ job.title }}</a>
+                            </h5>
+                            
+                            <div class="text-success fw-bold mb-3 fs-5">
+                                {{ job.salary_display }}
+                            </div>
+                            
+                            <div class="d-flex flex-wrap gap-1 mb-4">
+                                {% for skill in job.skills_list[:3] %}
+                                    <span class="badge bg-dark text-muted border border-secondary border-opacity-25 small font-mono">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex gap-2 pt-3 border-top border-secondary border-opacity-10">
+                            <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="btn btn-outline-cyan w-100 btn-sm">
+                                View Details
+                            </a>
+                            <a href="{{ url_for('jobs.details', job_id=job.id) }}" class="btn btn-cyan w-100 btn-sm">
+                                Apply Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 5: WHY CHOOSE AXIOMPATH -->
+<section class="py-5 bg-darker">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <div class="badge-pill-cyan mb-2">THE AXIOMPATH EDGE</div>
+            <h2 class="display-6 fw-bold text-white">Why Modern Graduates Choose Us</h2>
+            <p class="text-secondary">Traditional courses give theory. AXIOMPATH gives you measurable placement velocity.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="fs-1 text-cyan mb-3"><i class="fa-solid fa-stopwatch"></i></div>
+                    <h5 class="text-white fw-bold mb-2">Real Company Exam Simulators</h5>
+                    <p class="text-muted small">
+                        Replicate the exact interface, sectional time limits, and negative marking of TCS NQT, Infosys DSE, and Razorpay coding tests.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="fs-1 text-teal mb-3" style="color: #2dd4bf;"><i class="fa-solid fa-file-code"></i></div>
+                    <h5 class="text-white fw-bold mb-2">Machine Coding Framework</h5>
+                    <p class="text-muted small">
+                        Move beyond simple snippets. Learn how to write clean, modular, object-oriented code that senior engineers evaluate in product rounds.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card p-4 h-100">
+                    <div class="fs-1 text-purple mb-3" style="color: #c084fc;"><i class="fa-solid fa-chart-pie"></i></div>
+                    <h5 class="text-white fw-bold mb-2">Diagnostic Skill Analytics</h5>
+                    <p class="text-muted small">
+                        Visual radar diagrams pinpoint your strengths and exact weak spots across Quantitative, Verbal, DBMS, and DSA.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 6: STUDENT SUCCESS STORIES -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <div class="badge-pill-cyan mb-2">VERIFIED PLACEMENTS</div>
+            <h2 class="display-6 fw-bold text-white">Student Success Stories</h2>
+            <p class="text-secondary">Read how students from Tier-1 and Tier-2 engineering colleges unlocked high-package offers.</p>
+        </div>
+        
+        <div class="row g-4">
+            {% for t in testimonials %}
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="rounded-circle bg-cyan text-dark fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                                        {{ t.avatar_initials }}
+                                    </div>
+                                    <div>
+                                        <h6 class="text-white fw-bold mb-0">{{ t.student_name }}</h6>
+                                        <span class="text-muted small">{{ t.college }} ({{ t.graduation_year }})</span>
+                                    </div>
+                                </div>
+                                <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-25 px-2 py-1">
+                                    {{ t.package_lpa }}
+                                </span>
+                            </div>
+                            <p class="text-secondary small fst-italic mb-3">
+                                "{{ t.quote }}"
+                            </p>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 pt-2 border-top border-secondary border-opacity-10 text-muted small">
+                            <span>Placed as <b>{{ t.role }}</b> at <span class="text-cyan fw-bold">{{ t.company_placed }}</span></span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 7: STATISTICS AND ACHIEVEMENTS -->
+<section class="py-5 bg-darker border-top border-bottom border-secondary border-opacity-10">
+    <div class="container py-3">
+        <div class="row g-4 text-center">
+            <div class="col-6 col-md-3">
+                <h2 class="display-5 fw-extrabold text-cyan mb-1">
+                    <span class="counter-value" data-target="{{ stats.total_placed }}">2840</span>+
+                </h2>
+                <div class="text-muted small text-uppercase">Students Placed</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <h2 class="display-5 fw-extrabold text-white mb-1">
+                    <span class="counter-value" data-target="{{ stats.placement_rate }}" data-decimal="true">94.2</span>%
+                </h2>
+                <div class="text-muted small text-uppercase">Placement Rate</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <h2 class="display-5 fw-extrabold text-success mb-1">
+                    {{ stats.highest_ctc }}
+                </h2>
+                <div class="text-muted small text-uppercase">Highest Package</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <h2 class="display-5 fw-extrabold text-warning mb-1">
+                    <span class="counter-value" data-target="{{ stats.practice_questions }}">45000</span>+
+                </h2>
+                <div class="text-muted small text-uppercase">Questions Solved</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 8: PRICING PLANS -->
+<section class="py-5">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <div class="badge-pill-cyan mb-2">TRANSPARENT VALUE</div>
+            <h2 class="display-6 fw-bold text-white">Investment in Your Career</h2>
+            <p class="text-secondary">Transparent plans for every ambition. No hidden charges.</p>
+        </div>
+        
+        <div class="row g-4 align-items-center">
+            <!-- Free Tier -->
+            <div class="col-lg-4">
+                <div class="glass-card p-4">
+                    <h5 class="text-white fw-bold mb-1">Aspire Free</h5>
+                    <p class="text-muted small">Essential foundational tests for beginners.</p>
+                    <div class="my-3">
+                        <span class="fs-1 fw-bold text-white">₹0</span>
+                        <span class="text-muted small">/ forever</span>
+                    </div>
+                    <ul class="list-unstyled text-muted small mb-4">
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 10 Aptitude Practice Tests</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Browse All Job Vacancies</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 1 Standard Resume Download</li>
+                        <li class="mb-2 text-decoration-line-through text-muted"><i class="fa-solid fa-xmark me-2"></i> Company-Specific Mocks</li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-cyan w-100">Get Started Free</a>
+                </div>
+            </div>
+            
+            <!-- Pro Tier (Featured) -->
+            <div class="col-lg-4">
+                <div class="glass-card p-4 border-cyan position-relative shadow-cyan" style="background: rgba(15, 23, 42, 0.95); transform: scale(1.03);">
+                    <div class="position-absolute top-0 end-0 bg-cyan text-dark fw-bold px-3 py-1 rounded-bottom-start small">
+                        MOST POPULAR
+                    </div>
+                    <h5 class="text-white fw-bold mb-1">Axiom Accelerator</h5>
+                    <p class="text-muted small">Complete preparation engine for product firms.</p>
+                    <div class="my-3">
+                        <span class="fs-1 fw-bold text-cyan">₹1,499</span>
+                        <span class="text-muted small">/ 6 months</span>
+                    </div>
+                    <ul class="list-unstyled text-secondary small mb-4">
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Unlimited Aptitude & CS Mocks</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Direct 1-Click Job Applications</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> AI-Optimized Resume Builder & PDF</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> TCS, Infosys, Razorpay Mock Packs</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Performance Analytics & Radar Diagnostics</li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-cyan w-100">Unlock Accelerator</a>
+                </div>
+            </div>
+            
+            <!-- Elite Tier -->
+            <div class="col-lg-4">
+                <div class="glass-card p-4">
+                    <h5 class="text-white fw-bold mb-1">Achiever Pass</h5>
+                    <p class="text-muted small">Includes 1-on-1 mock interviews & portfolio review.</p>
+                    <div class="my-3">
+                        <span class="fs-1 fw-bold text-white">₹3,999</span>
+                        <span class="text-muted small">/ 12 months</span>
+                    </div>
+                    <ul class="list-unstyled text-muted small mb-4">
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Everything in Pro Accelerator</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 2 Mock Interviews with SDE Mentors</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> Guaranteed Shortlist Referrals</li>
+                        <li class="mb-2"><i class="fa-solid fa-check text-cyan me-2"></i> 1-on-1 GitHub & Project Code Review</li>
+                    </ul>
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-outline-cyan w-100">Enroll Elite</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 9: FAQS -->
+<section class="py-5 bg-darker">
+    <div class="container py-4">
+        <div class="text-center max-w-700 mx-auto mb-5">
+            <div class="badge-pill-cyan mb-2">QUICK ANSWERS</div>
+            <h2 class="display-6 fw-bold text-white">Frequently Asked Questions</h2>
+            <p class="text-secondary">Everything you need to know about preparing and getting hired with AXIOMPATH.</p>
+        </div>
+        
+        <div class="max-w-800 mx-auto">
+            <div class="accordion accordion-flush" id="faqAccordion">
+                <div class="accordion-item glass-card mb-3 border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How does AXIOMPATH help final-year college students?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            AXIOMPATH combines round-1 aptitude elimination prep with advanced machine coding tutorials, company-specific test pattern papers, and direct placement openings. We bridge the gap between academic textbooks and actual industry recruitment criteria.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item glass-card mb-3 border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Are the mock tests timed like real recruitment tests?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            Yes! Our test runner mimics actual online assessment portals with countdown timers, question navigation palettes, review flags, negative marking rules, and instant performance breakdowns upon submission.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item glass-card mb-3 border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            Can I download my resume as a PDF?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            Yes. The integrated Resume Builder formats your projects, education, and technical skills into an ATS-compliant template and provides an instant one-click PDF download generated directly on our server.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="accordion-item glass-card mb-3 border-0">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Are the job listings on AXIOMPATH active?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-secondary small">
+                            AXIOMPATH features curated recruitment drives and internship openings from top tech employers. Demo recruitment drives are tagged for interview simulation so students can practice applying and tracking status.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 10: FINAL CALL TO ACTION -->
+<section class="py-5 position-relative">
+    <div class="container py-4">
+        <div class="glass-panel p-5 text-center position-relative overflow-hidden" style="border: 1px solid rgba(6, 182, 212, 0.4); box-shadow: 0 0 50px rgba(6, 182, 212, 0.15);">
+            <div class="badge-pill-cyan mb-3">ACCELERATE YOUR FUTURE</div>
+            <h2 class="display-5 fw-extrabold text-white mb-3">Ready to Crack Your Dream Tech Job?</h2>
+            <p class="lead text-secondary max-w-600 mx-auto mb-4">
+                Join thousands of students who traded guesswork for structured preparation and landed offers at top tech companies.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{{ url_for('auth.register') }}" class="btn btn-cyan btn-lg px-4">
+                    <i class="fa-solid fa-arrow-right-to-bracket"></i> Create Free Account
+                </a>
+                <a href="{{ url_for('jobs.index') }}" class="btn btn-outline-cyan btn-lg px-4">
+                    Explore Vacancies
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

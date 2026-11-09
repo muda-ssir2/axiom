@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block title %}My Candidate Profile – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">CAMPUS RECRUITER VISIBILITY</div>
+                <h2 class="display-6 fw-bold text-white mb-1">My Candidate Profile</h2>
+                <p class="text-secondary small mb-0">
+                    A comprehensive profile increases recruiter shortlisting rates by up to 3.5x during campus drives.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="badge bg-secondary bg-opacity-25 text-white border border-secondary border-opacity-25 px-3 py-2">
+                    Profile Strength: <span class="text-cyan fw-bold">{{ profile.completion_percentage }}%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Profile Edit Form -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 p-md-5">
+                <form method="POST" action="{{ url_for('student.profile') }}">
+                    {{ form.hidden_tag() }}
+
+                    <h5 class="text-white fw-bold mb-3 pb-2 border-bottom border-secondary border-opacity-10">Personal Information</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Full Name</label>
+                            {{ form.name(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Phone Number</label>
+                            {{ form.phone(class="form-control", placeholder="+91 98765 43210") }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Professional Headline</label>
+                            {{ form.headline(class="form-control", placeholder="e.g. Aspiring Backend Developer | Python & SQL | Final Year B.Tech") }}
+                        </div>
+                    </div>
+
+                    <h5 class="text-white fw-bold mb-3 pb-2 border-bottom border-secondary border-opacity-10">Academic Background</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">College / University</label>
+                            {{ form.college(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Degree & Branch</label>
+                            {{ form.degree(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Graduation Year</label>
+                            {{ form.graduation_year(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">CGPA / Percentage</label>
+                            {{ form.cgpa(class="form-control", step="0.01") }}
+                        </div>
+                    </div>
+
+                    <h5 class="text-white fw-bold mb-3 pb-2 border-bottom border-secondary border-opacity-10">Target Career & Tech Stack</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Target Role</label>
+                            {{ form.target_role(class="form-control", placeholder="e.g. Full Stack Developer") }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Key Technical Skills (comma separated)</label>
+                            {{ form.skills(class="form-control", rows="2") }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Short Professional Bio</label>
+                            {{ form.bio(class="form-control", rows="3") }}
+                        </div>
+                    </div>
+
+                    <h5 class="text-white fw-bold mb-3 pb-2 border-bottom border-secondary border-opacity-10">Online Profiles</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">GitHub URL</label>
+                            {{ form.github_url(class="form-control", placeholder="https://github.com/username") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">LinkedIn URL</label>
+                            {{ form.linkedin_url(class="form-control", placeholder="https://linkedin.com/in/username") }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Portfolio Website URL</label>
+                            {{ form.portfolio_url(class="form-control", placeholder="https://yourportfolio.dev") }}
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{{ url_for('student.dashboard') }}" class="btn btn-glass">Cancel</a>
+                        <button type="submit" class="btn btn-cyan">
+                            <i class="fa-solid fa-floppy-disk me-1"></i> Save Profile Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sidebar Summary -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <div class="text-center mb-3">
+                    <div class="rounded-circle bg-cyan text-dark fw-bold mx-auto mb-2 d-flex align-items-center justify-content-center fs-3" style="width: 64px; height: 64px;">
+                        {{ current_user.name[:1] }}
+                    </div>
+                    <h5 class="text-white fw-bold mb-0">{{ current_user.name }}</h5>
+                    <span class="text-cyan small fw-semibold">{{ profile.target_role or 'Candidate' }}</span>
+                </div>
+                <div class="border-top border-secondary border-opacity-10 pt-3 small text-muted">
+                    <div class="mb-2"><i class="fa-solid fa-envelope text-cyan me-2"></i> {{ current_user.email }}</div>
+                    {% if current_user.phone %}
+                        <div class="mb-2"><i class="fa-solid fa-phone text-cyan me-2"></i> {{ current_user.phone }}</div>
+                    {% endif %}
+                    <div class="mb-2"><i class="fa-solid fa-building-columns text-cyan me-2"></i> {{ profile.college }}</div>
+                    <div class="mb-2"><i class="fa-solid fa-graduation-cap text-cyan me-2"></i> {{ profile.degree }} ({{ profile.graduation_year }})</div>
+                    <div><i class="fa-solid fa-star text-warning me-2"></i> CGPA: <b>{{ profile.cgpa }}</b></div>
+                </div>
+            </div>
+
+            <div class="glass-card p-4">
+                <h6 class="text-white fw-bold mb-3 small text-uppercase letter-spacing-1">Quick Links</h6>
+                <div class="d-flex flex-column gap-2">
+                    <a href="{{ url_for('resume.index') }}" class="btn btn-outline-cyan btn-sm text-start">
+                        <i class="fa-solid fa-file-invoice me-2"></i> Open Resume Builder
+                    </a>
+                    <a href="{{ url_for('student.applications') }}" class="btn btn-glass btn-sm text-start text-white">
+                        <i class="fa-solid fa-file-signature me-2"></i> Track Applications
+                    </a>
+                    <a href="{{ url_for('student.saved_jobs') }}" class="btn btn-glass btn-sm text-start text-white">
+                        <i class="fa-solid fa-bookmark me-2"></i> Bookmarked Jobs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

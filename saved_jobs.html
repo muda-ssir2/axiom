@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Bookmarked Jobs – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">SAVED OPPORTUNITIES</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Bookmarked Job Vacancies</h2>
+                <p class="text-secondary small mb-0">
+                    Review and apply to positions you have saved for later.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('jobs.index') }}" class="btn btn-cyan">
+                    <i class="fa-solid fa-magnifying-glass me-1"></i> Browse More Openings
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Saved Jobs List -->
+    <div class="row g-4">
+        {% if saved_jobs %}
+            {% for item in saved_jobs %}
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div class="rounded-3 d-flex align-items-center justify-content-center text-white fw-bold fs-5" style="width: 48px; height: 48px; background: {{ item.job.company.logo_bg_color }};">
+                                    {{ item.job.company.logo_initials }}
+                                </div>
+                                <div>
+                                    <h5 class="text-white fw-bold mb-0">
+                                        <a href="{{ url_for('jobs.details', job_id=item.job.id) }}" class="text-white hover-cyan">{{ item.job.title }}</a>
+                                    </h5>
+                                    <span class="text-muted small">{{ item.job.company.name }} • {{ item.job.location }} • {{ item.job.job_type }}</span>
+                                </div>
+                            </div>
+                            <div class="text-success fw-bold mb-3 fs-6">{{ item.job.salary_display }}</div>
+                            <p class="text-secondary small mb-3">{{ item.job.description[:120] }}...</p>
+                        </div>
+
+                        <div class="pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                            <span class="text-muted small">Saved on {{ item.saved_at.strftime('%d %b %Y') }}</span>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-danger btn-save-job-ajax" data-job-id="{{ item.job.id }}" title="Remove Bookmark">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </button>
+                                <a href="{{ url_for('jobs.details', job_id=item.job.id) }}" class="btn btn-cyan btn-sm">
+                                    Apply Now
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center py-5">
+                <div class="glass-card p-5 max-w-600 mx-auto">
+                    <i class="fa-regular fa-bookmark fs-1 text-muted mb-3"></i>
+                    <h4 class="text-white fw-bold mb-2">No Saved Jobs Yet</h4>
+                    <p class="text-muted small mb-4">Click the bookmark icon on any job posting in the Explore Jobs tab to save it here.</p>
+                    <a href="{{ url_for('jobs.index') }}" class="btn btn-cyan">Browse Opportunities</a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

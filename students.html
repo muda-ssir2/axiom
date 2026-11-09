@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Registered Students – AXIOMPATH Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">STUDENT REGISTRY</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Registered Student Profiles</h2>
+                <p class="text-secondary small mb-0">Inspect college candidates, placement tests taken, applications submitted, and account permissions.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <form method="GET" action="{{ url_for('admin.students') }}" class="d-flex gap-2">
+                    <input type="text" name="search" class="form-control form-control-sm" placeholder="Search by name or email..." value="{{ search }}">
+                    <button type="submit" class="btn btn-cyan btn-sm">Search</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Students Table -->
+    <div class="glass-card p-4 p-md-5">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                <thead>
+                    <tr class="text-muted small text-uppercase">
+                        <th class="bg-transparent border-secondary border-opacity-10">Candidate</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">College & Degree</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Target Role</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Tests Taken</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Applications</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Account Status</th>
+                        <th class="bg-transparent border-secondary border-opacity-10 text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for st in students %}
+                        <tr>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                <div class="fw-bold text-white">{{ st.name }}</div>
+                                <span class="text-muted small">{{ st.email }}</span>
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                {% if st.profile %}
+                                    <span class="text-white small">{{ st.profile.college }}</span><br>
+                                    <span class="text-muted small">{{ st.profile.degree }} ({{ st.profile.graduation_year }}) • CGPA: <b>{{ st.profile.cgpa }}</b></span>
+                                {% else %}
+                                    <span class="text-muted small">Profile not setup</span>
+                                {% endif %}
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                <span class="badge bg-secondary bg-opacity-25 text-cyan small">
+                                    {{ st.profile.target_role if st.profile else 'General Candidate' }}
+                                </span>
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle text-muted small">
+                                {{ st.test_results.count() }} tests
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle text-muted small">
+                                {{ st.applications.count() }} applications
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                {% if st.is_active_account %}
+                                    <span class="badge bg-success bg-opacity-25 text-success">Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger bg-opacity-25 text-danger">Suspended</span>
+                                {% endif %}
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle text-end">
+                                <form method="POST" action="{{ url_for('admin.toggle_student_status', student_id=st.id) }}" class="d-inline">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <button type="submit" class="btn btn-sm {% if st.is_active_account %}btn-outline-danger{% else %}btn-outline-success{% endif %} py-1 px-2" style="font-size: 0.75rem;">
+                                        {% if st.is_active_account %}Deactivate{% else %}Reactivate{% endif %}
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

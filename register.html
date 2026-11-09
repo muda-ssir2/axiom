@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Create Account – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-5 my-md-3">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <div class="brand-icon-box mx-auto mb-3" style="width: 44px; height: 44px; font-size: 1.3rem;">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <h3 class="fw-bold text-white mb-1">Create Your Account</h3>
+                    <p class="text-muted small">Begin your career preparation journey with AXIOMPATH</p>
+                </div>
+
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Full Name</label>
+                        {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), id="name", placeholder="e.g. Rahul Sharma") }}
+                        {% for err in form.name.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="email">Email Address</label>
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), id="email", placeholder="rahul@college.edu") }}
+                            {% for err in form.email.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="phone">Phone Number (Optional)</label>
+                            {{ form.phone(class="form-control" + (" is-invalid" if form.phone.errors else ""), id="phone", placeholder="+91 98765 43210") }}
+                            {% for err in form.phone.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="password">Create Password</label>
+                            {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), id="password", placeholder="At least 6 characters") }}
+                            {% for err in form.password.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="confirm_password">Confirm Password</label>
+                            {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), id="confirm_password", placeholder="Repeat password") }}
+                            {% for err in form.confirm_password.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        {{ form.agree_terms(class="form-check-input" + (" is-invalid" if form.agree_terms.errors else ""), id="agree_terms") }}
+                        <label class="form-check-label text-muted small" for="agree_terms">
+                            I agree to the <a href="{{ url_for('main.terms') }}" class="text-cyan">Terms of Service</a> & <a href="{{ url_for('main.privacy') }}" class="text-cyan">Privacy Policy</a>
+                        </label>
+                        {% for err in form.agree_terms.errors %}
+                            <div class="invalid-feedback d-block">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-cyan w-100 py-2 fs-6">
+                        <i class="fa-solid fa-bolt me-2"></i> Create Free Candidate Profile
+                    </button>
+                </form>
+
+                <div class="text-center mt-4 text-muted small">
+                    Already have an account? 
+                    <a href="{{ url_for('auth.login') }}" class="text-cyan fw-semibold">Sign In</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

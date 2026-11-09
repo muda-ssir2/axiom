@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} at {{ job.company.name }} – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav class="mb-4">
+        <ol class="breadcrumb text-muted small">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('jobs.index') }}" class="text-muted">Jobs</a></li>
+            <li class="breadcrumb-item active text-cyan" aria-current="page">{{ job.title }}</li>
+        </ol>
+    </nav>
+
+    <div class="row g-4">
+        <!-- Main Job Details Column -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 p-md-5 mb-4">
+                <!-- Header Info -->
+                <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4 pb-4 border-bottom border-secondary border-opacity-10">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="rounded-3 d-flex align-items-center justify-content-center fw-bold text-white fs-4" style="width: 60px; height: 60px; background: {{ job.company.logo_bg_color }};">
+                            {{ job.company.logo_initials }}
+                        </div>
+                        <div>
+                            <h3 class="text-white fw-bold mb-1">{{ job.title }}</h3>
+                            <div class="text-muted small">
+                                <span class="text-cyan fw-bold">{{ job.company.name }}</span> • 
+                                <i class="fa-solid fa-location-dot ms-1"></i> {{ job.location }} • 
+                                <span class="badge bg-secondary bg-opacity-25 text-white ms-1">{{ job.workplace_type }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2 align-items-center">
+                        {% if current_user.is_authenticated %}
+                            <button class="btn btn-save-job-ajax {% if is_saved %}btn-cyan{% else %}btn-outline-cyan{% endif %}" data-job-id="{{ job.id }}">
+                                <i class="{% if is_saved %}fas{% else %}far{% endif %} fa-bookmark me-1"></i>
+                                <span class="save-text">{% if is_saved %}Saved{% else %}Save Job{% endif %}</span>
+                            </button>
+                        {% endif %}
+
+                        {% if has_applied %}
+                            <button class="btn btn-success" disabled>
+                                <i class="fa-solid fa-circle-check me-1"></i> Applied ({{ existing_application.status }})
+                            </button>
+                        {% elif current_user.is_authenticated and current_user.is_admin %}
+                            <span class="badge bg-warning text-dark p-2">Admin View Only</span>
+                        {% elif current_user.is_authenticated %}
+                            <button class="btn btn-cyan" data-bs-toggle="modal" data-bs-target="#applyModal">
+                                <i class="fa-solid fa-paper-plane me-1"></i> Apply Now
+                            </button>
+                        {% else %}
+                            <a href="{{ url_for('auth.login', next=request.path) }}" class="btn btn-cyan">
+                                Sign In to Apply
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Job Highlight Badges -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">Compensation</span>
+                            <span class="text-success fw-bold">{{ job.salary_display }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">Experience</span>
+                            <span class="text-white fw-bold">{{ job.experience_level }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">Job Category</span>
+                            <span class="text-cyan fw-bold">{{ job.role_category }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <div class="p-3 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">Openings</span>
+                            <span class="text-warning fw-bold">{{ job.openings }} Positions</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Required Skills -->
+                <div class="mb-4">
+                    <h6 class="text-white fw-bold text-uppercase small letter-spacing-1 mb-2">Technical Skills & Technologies</h6>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for skill in job.skills_list %}
+                            <span class="badge bg-dark text-cyan border border-cyan border-opacity-25 px-3 py-2 font-mono">{{ skill }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Job Description -->
+                <div class="mb-4">
+                    <h5 class="text-white fw-bold mb-3">Role Overview & Responsibilities</h5>
+                    <div class="text-secondary" style="line-height: 1.8; white-space: pre-line;">
+                        {{ job.description }}
+                    </div>
+                </div>
+
+                <!-- Requirements & Eligibility -->
+                <div class="mb-4">
+                    <h5 class="text-white fw-bold mb-3">Eligibility & Candidate Qualifications</h5>
+                    <div class="text-secondary" style="line-height: 1.8; white-space: pre-line;">
+                        {{ job.requirements }}
+                    </div>
+                </div>
+
+                <!-- Application CTA Footer -->
+                <div class="p-4 rounded mt-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3" style="background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.2);">
+                    <div>
+                        <div class="text-white fw-bold">Ready to take this career leap?</div>
+                        <span class="text-muted small">Submit your application today. Recruitment review rounds happen weekly.</span>
+                    </div>
+                    {% if not has_applied and current_user.is_authenticated and not current_user.is_admin %}
+                        <button class="btn btn-cyan" data-bs-toggle="modal" data-bs-target="#applyModal">
+                            <i class="fa-solid fa-paper-plane me-1"></i> Quick Apply
+                        </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Company Profile & Similar Jobs -->
+        <div class="col-lg-4">
+            <!-- Company Profile Card -->
+            <div class="glass-card p-4 mb-4">
+                <h6 class="text-white fw-bold text-uppercase small letter-spacing-1 mb-3">About The Company</h6>
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="rounded-3 d-flex align-items-center justify-content-center fw-bold text-white fs-5" style="width: 48px; height: 48px; background: {{ job.company.logo_bg_color }};">
+                        {{ job.company.logo_initials }}
+                    </div>
+                    <div>
+                        <h6 class="text-white fw-bold mb-0">{{ job.company.name }}</h6>
+                        <span class="text-muted small">{{ job.company.industry }}</span>
+                    </div>
+                </div>
+                <p class="text-secondary small mb-3">
+                    {{ job.company.about }}
+                </p>
+                <div class="border-top border-secondary border-opacity-10 pt-3 small text-muted">
+                    <div class="mb-2"><i class="fa-solid fa-users text-cyan me-2"></i> Company Size: <b>{{ job.company.employee_count }}</b></div>
+                    <div class="mb-2"><i class="fa-solid fa-map-location-dot text-cyan me-2"></i> HQ: <b>{{ job.company.location }}</b></div>
+                    {% if job.company.website %}
+                        <div><i class="fa-solid fa-globe text-cyan me-2"></i> <a href="{{ job.company.website }}" target="_blank" class="text-cyan">{{ job.company.website }}</a></div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Similar Openings -->
+            <div class="glass-card p-4">
+                <h6 class="text-white fw-bold text-uppercase small letter-spacing-1 mb-3">Similar Opportunities</h6>
+                <div class="d-flex flex-column gap-3">
+                    {% for sim in similar_jobs %}
+                        <div class="p-3 rounded bg-secondary bg-opacity-10">
+                            <div class="fw-bold small mb-1">
+                                <a href="{{ url_for('jobs.details', job_id=sim.id) }}" class="text-white hover-cyan">{{ sim.title }}</a>
+                            </div>
+                            <div class="text-muted small mb-2">{{ sim.company.name }} • {{ sim.location }}</div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="text-success fw-bold small">{{ sim.salary_display }}</span>
+                                <a href="{{ url_for('jobs.details', job_id=sim.id) }}" class="text-cyan small text-decoration-none">View <i class="fa-solid fa-arrow-right ms-1"></i></a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Apply Modal -->
+{% if current_user.is_authenticated and not current_user.is_admin %}
+<div class="modal fade" id="applyModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card border-0" style="background: rgba(11, 17, 32, 0.98);">
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title text-white fw-bold">
+                    <i class="fa-solid fa-paper-plane text-cyan me-2"></i> Apply to {{ job.company.name }}
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('jobs.apply', job_id=job.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="modal-body">
+                    <div class="p-3 rounded bg-secondary bg-opacity-10 mb-3 small">
+                        <div class="text-muted">Applicant Details:</div>
+                        <div class="text-white fw-bold">{{ current_user.name }} ({{ current_user.email }})</div>
+                        <div class="text-cyan">{{ current_user.profile.college }} • {{ current_user.profile.degree }}</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label text-white" for="cover_note">Cover Note / Why are you a great fit?</label>
+                        <textarea class="form-control" name="cover_note" id="cover_note" rows="4" placeholder="Mention relevant projects, algorithms solved, tech stack mastery or passion for this role..." required></textarea>
+                    </div>
+
+                    <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 small text-muted">
+                        <i class="fa-solid fa-file-pdf text-danger me-2"></i>
+                        <span>Your AXIOMPATH Candidate Profile & Resume will be attached automatically to this submission.</span>
+                    </div>
+                </div>
+                <div class="modal-footer border-secondary border-opacity-25">
+                    <button type="button" class="btn btn-glass" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-cyan">
+                        <i class="fa-solid fa-check me-1"></i> Confirm & Submit Application
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

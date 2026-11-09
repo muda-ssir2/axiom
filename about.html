@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}About Us – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center max-w-800 mx-auto mb-5">
+        <div class="badge-pill-cyan mb-3">OUR PURPOSE & VISION</div>
+        <h1 class="display-5 fw-extrabold text-white mb-3">
+            Democratizing Placement Success for <br>
+            <span class="text-gradient-cyan">Every Indian Tech Graduate</span>
+        </h1>
+        <p class="lead text-secondary">
+            AXIOMPATH was founded with a singular conviction: raw talent is distributed equally across every engineering college in India, but placement preparation guidance is not.
+        </p>
+    </div>
+
+    <!-- Impact Stats -->
+    <div class="glass-card p-4 p-md-5 mb-5 text-center">
+        <div class="row g-4">
+            <div class="col-6 col-md-3">
+                <div class="fs-2 fw-extrabold text-cyan mb-1">{{ stats.total_students }}+</div>
+                <div class="text-muted small text-uppercase">Candidates Trained</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fs-2 fw-extrabold text-white mb-1">{{ stats.hiring_ratio }}</div>
+                <div class="text-muted small text-uppercase">Placement Conversion</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fs-2 fw-extrabold text-success mb-1">{{ stats.partner_companies }}+</div>
+                <div class="text-muted small text-uppercase">Hiring Employers</div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="fs-2 fw-extrabold text-warning mb-1">{{ stats.practice_tests }}+</div>
+                <div class="text-muted small text-uppercase">Mock Tests Configured</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3 Core Pillars -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-cyan mb-3"><i class="fa-solid fa-crosshairs"></i></div>
+                <h5 class="text-white fw-bold mb-2">Elimination-Proof Foundations</h5>
+                <p class="text-secondary small">
+                    80% of applicants are rejected in round 1 online aptitude and basic CS tests. We provide realistic timed simulators to ensure students clear these cutoffs consistently.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-success mb-3"><i class="fa-solid fa-code"></i></div>
+                <h5 class="text-white fw-bold mb-2">Machine Coding Mastery</h5>
+                <p class="text-secondary small">
+                    Product companies demand clean, modular code with OOP principles and unit testing. We teach candidates how to build production-style modules under interview time limits.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-purple mb-3" style="color: #c084fc;"><i class="fa-solid fa-file-shield"></i></div>
+                <h5 class="text-white fw-bold mb-2">High-Trust Placement Ecosystem</h5>
+                <p class="text-secondary small">
+                    We bridge the gap between motivated candidates and top engineering leaders looking for real builders, not just textbook test takers.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leadership & Team Quote -->
+    <div class="glass-panel p-5 text-center position-relative overflow-hidden mb-5">
+        <div class="fs-1 text-cyan mb-3"><i class="fa-solid fa-quote-left"></i></div>
+        <h4 class="text-white fw-semibold max-w-700 mx-auto mb-4" style="line-height: 1.6;">
+            "We built AXIOMPATH to be the platform we wished we had during our own college placements — focused on signal over noise, speed, and real architectural craftsmanship."
+        </h4>
+        <div class="text-cyan fw-bold">The AXIOMPATH Engineering Team</div>
+        <span class="text-muted small">Bengaluru, India</span>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Aptitude Mastery & Practice Tests – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">ROUND 1 ELIMINATION DEFENSE</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Aptitude & Diagnostic Tests</h2>
+                <p class="text-secondary small mb-0">
+                    Timed practice tests designed to replicate campus placement tests of TCS, Infosys, Wipro, Accenture, and product unicorns.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="#testCatalog" class="btn btn-cyan">
+                    <i class="fa-solid fa-play me-1"></i> Start a Timed Test
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Overview Cards -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #06b6d4 !important;">
+                <div class="fs-2 text-cyan mb-2"><i class="fa-solid fa-calculator"></i></div>
+                <h5 class="text-white fw-bold">Quantitative Ability</h5>
+                <p class="text-muted small mb-0">
+                    Time & Work, Speed-Distance, Profit & Loss, Percentages, Permutations, Probability, and Ratio-Proportion.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #10b981 !important;">
+                <div class="fs-2 text-success mb-2"><i class="fa-solid fa-puzzle-piece"></i></div>
+                <h5 class="text-white fw-bold">Logical Reasoning</h5>
+                <p class="text-muted small mb-0">
+                    Syllogisms, Blood Relations, Seating Arrangements, Coding-Decoding, Number Series, and Direction Sense.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #8b5cf6 !important;">
+                <div class="fs-2 text-purple mb-2" style="color: #c084fc;"><i class="fa-solid fa-spell-check"></i></div>
+                <h5 class="text-white fw-bold">Verbal Ability</h5>
+                <p class="text-muted small mb-0">
+                    Sentence Correction, Error Spotting, Reading Comprehension, Synonyms & Antonyms, and Para-jumbles.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100 border-top border-3" style="border-top-color: #f59e0b !important;">
+                <div class="fs-2 text-warning mb-2"><i class="fa-solid fa-chart-column"></i></div>
+                <h5 class="text-white fw-bold">Data Interpretation</h5>
+                <p class="text-muted small mb-0">
+                    Bar Graphs, Pie Charts, Tabular Data, Line Charts, and Caselet calculations with speed shortcuts.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Practice Tests Catalog -->
+    <div id="testCatalog" class="mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-white fw-bold mb-0">Available Timed Assessments</h4>
+            <span class="text-muted small">{{ tests|length }} Tests Available</span>
+        </div>
+
+        <div class="row g-4">
+            {% for test in tests %}
+                <div class="col-lg-6">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between position-relative">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge bg-secondary bg-opacity-25 text-cyan small border border-cyan border-opacity-25">
+                                    {{ test.category }}
+                                </span>
+                                <span class="badge {% if test.difficulty == 'Easy' %}bg-success{% elif test.difficulty == 'Medium' %}bg-warning text-dark{% else %}bg-danger{% endif %} small">
+                                    {{ test.difficulty }}
+                                </span>
+                            </div>
+
+                            <h5 class="text-white fw-bold mb-2">{{ test.title }}</h5>
+                            <p class="text-secondary small mb-3">
+                                {{ test.description }}
+                            </p>
+
+                            <div class="d-flex flex-wrap gap-3 text-muted small mb-3">
+                                <span><i class="fa-solid fa-clock text-cyan me-1"></i> {{ test.duration_mins }} Mins</span>
+                                <span><i class="fa-solid fa-circle-question text-cyan me-1"></i> {{ test.questions.count() }} Questions</span>
+                                <span><i class="fa-solid fa-award text-cyan me-1"></i> {{ test.total_marks }} Marks</span>
+                                <span><i class="fa-solid fa-shield-halved text-cyan me-1"></i> Pass: {{ test.passing_marks }} Marks</span>
+                            </div>
+                        </div>
+
+                        <div class="pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                            <div>
+                                {% if test.id in user_results %}
+                                    {% set res = user_results[test.id] %}
+                                    <span class="small text-muted d-block">Last Attempt:</span>
+                                    <span class="fw-bold {% if res.passed %}text-success{% else %}text-danger{% endif %} small">
+                                        {{ res.score }} / {{ test.total_marks }} ({{ res.percentage }}%)
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-dark text-muted border border-secondary border-opacity-25 small">Not attempted yet</span>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                {% if test.id in user_results %}
+                                    <a href="{{ url_for('preparation.test_result', result_id=user_results[test.id].id) }}" class="btn btn-outline-cyan btn-sm">
+                                        View Result
+                                    </a>
+                                {% endif %}
+                                <a href="{{ url_for('preparation.take_test', test_id=test.id) }}" class="btn btn-cyan btn-sm">
+                                    <i class="fa-solid fa-play me-1"></i> Take Test
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

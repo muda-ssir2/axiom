@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Interview Preparation & Company Packs – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">CRACK THE FINAL ROUNDS</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Interview Preparation & Company Packs</h2>
+                <p class="text-secondary small mb-0">
+                    Master HR behavioral rounds with the STAR method, study company-specific recruitment blueprints, and rehearse with our simulator.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="{{ url_for('preparation.mock_interview') }}" class="btn btn-cyan">
+                    <i class="fa-solid fa-headset me-1"></i> Launch Mock Simulator
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Specific Recruitment Packs -->
+    <div class="mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="text-white fw-bold mb-0">Company-Specific Placement Playbooks</h4>
+            <span class="text-muted small">Updated for 2026 Hiring Season</span>
+        </div>
+
+        <div class="row g-4">
+            {% for pack in company_packs %}
+                <div class="col-lg-4 col-md-6">
+                    <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between border-top border-3" style="border-top-color: {{ pack.color }} !important;">
+                        <div>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <h5 class="text-white fw-bold mb-0">{{ pack.name }}</h5>
+                                <span class="badge bg-success bg-opacity-25 text-success small">{{ pack.salary }}</span>
+                            </div>
+                            <div class="text-cyan small fw-semibold mb-3">
+                                <i class="fa-solid fa-layer-group me-1"></i> {{ pack.rounds }}
+                            </div>
+                            <div class="p-3 rounded bg-secondary bg-opacity-10 text-secondary small mb-3">
+                                <b class="text-white d-block mb-1">Key Focus Areas:</b>
+                                {{ pack.focus }}
+                            </div>
+                        </div>
+
+                        <div class="pt-2 border-top border-secondary border-opacity-10">
+                            <a href="{{ url_for('preparation.mock_interview') }}" class="btn btn-outline-cyan btn-sm w-100">
+                                Simulate {{ pack.name.split()[0] }} Interview
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- HR STAR Methodology Guide & Questions -->
+    <div class="glass-card p-4 p-md-5 mb-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+            <div>
+                <h4 class="text-white fw-bold mb-1">HR Behavioral Mastery (STAR Framework)</h4>
+                <p class="text-muted small mb-0">Structure every situational answer using Situation, Task, Action, and Measurable Result.</p>
+            </div>
+            <span class="badge badge-pill-cyan">Proven 94% Impact</span>
+        </div>
+
+        <div class="row g-4">
+            {% for hr in hr_questions %}
+                <div class="col-12">
+                    <div class="p-4 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-10">
+                        <h5 class="text-white fw-bold mb-2">
+                            <span class="text-cyan">Q{{ loop.index }}:</span> {{ hr.question }}
+                        </h5>
+                        <div class="text-warning small mb-3">
+                            <i class="fa-solid fa-lightbulb me-1"></i> <b>Interviewer's Evaluation Tip:</b> {{ hr.tip }}
+                        </div>
+                        <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 text-secondary small">
+                            <b class="text-success d-block mb-1"><i class="fa-solid fa-quote-left me-1"></i> Model Benchmark Answer:</b>
+                            {{ hr.sample_answer }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Simulated Assessment: {{ test.title }} – AXIOMPATH{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Full test simulation mode */
+    .test-timer-badge {
+        font-family: var(--font-mono);
+        font-size: 1.25rem;
+        background: rgba(6, 182, 212, 0.15);
+        border: 1px solid var(--cyan-primary);
+        color: var(--cyan-bright);
+        padding: 0.35rem 0.9rem;
+        border-radius: var(--radius-sm);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .question-block {
+        display: none;
+    }
+    .question-block.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Test Top Status Bar -->
+    <div class="glass-panel p-3 mb-4 sticky-top" style="top: 75px; z-index: 99;">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div>
+                <span class="badge bg-secondary bg-opacity-25 text-cyan small">{{ test.category }}</span>
+                <h5 class="text-white fw-bold mb-0 mt-1">{{ test.title }}</h5>
+            </div>
+
+            <div class="d-flex align-items-center gap-3">
+                <div class="test-timer-badge">
+                    <i class="fa-solid fa-clock"></i>
+                    <span id="timerDisplay">--:--</span>
+                </div>
+                <button type="button" class="btn btn-cyan btn-sm" onclick="confirmSubmit()">
+                    <i class="fa-solid fa-paper-plane me-1"></i> Submit Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Runner Body -->
+    <form id="testForm" method="POST" action="{{ url_for('preparation.submit_test', test_id=test.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="hidden" name="time_taken_seconds" id="timeTakenSeconds" value="0">
+
+        <div class="row g-4">
+            <!-- Active Question Column -->
+            <div class="col-lg-8">
+                <div class="glass-card p-4 p-md-5">
+                    {% for q in questions %}
+                        <div class="question-block {% if loop.first %}active{% endif %}" id="qblock-{{ loop.index }}" data-qid="{{ q.id }}">
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                                <span class="badge bg-secondary text-cyan px-2 py-1 font-mono">Question {{ loop.index }} of {{ questions|length }}</span>
+                                <span class="text-muted small"><i class="fa-solid fa-award text-warning me-1"></i> +{{ q.marks }} Marks | -0.5 Negative</span>
+                            </div>
+
+                            <h5 class="text-white fw-semibold mb-4" style="line-height: 1.6;">
+                                {{ q.question_text }}
+                            </h5>
+
+                            <div class="options-container mb-4">
+                                <label class="choice-label" for="q{{ q.id }}_a">
+                                    <input type="radio" name="question_{{ q.id }}" id="q{{ q.id }}_a" value="A" class="form-check-input mt-1" onchange="onAnswerSelected({{ loop.index }})">
+                                    <div class="choice-content text-secondary small">
+                                        <b class="text-white me-2">A.</b> {{ q.option_a }}
+                                    </div>
+                                </label>
+
+                                <label class="choice-label" for="q{{ q.id }}_b">
+                                    <input type="radio" name="question_{{ q.id }}" id="q{{ q.id }}_b" value="B" class="form-check-input mt-1" onchange="onAnswerSelected({{ loop.index }})">
+                                    <div class="choice-content text-secondary small">
+                                        <b class="text-white me-2">B.</b> {{ q.option_b }}
+                                    </div>
+                                </label>
+
+                                <label class="choice-label" for="q{{ q.id }}_c">
+                                    <input type="radio" name="question_{{ q.id }}" id="q{{ q.id }}_c" value="C" class="form-check-input mt-1" onchange="onAnswerSelected({{ loop.index }})">
+                                    <div class="choice-content text-secondary small">
+                                        <b class="text-white me-2">C.</b> {{ q.option_c }}
+                                    </div>
+                                </label>
+
+                                <label class="choice-label" for="q{{ q.id }}_d">
+                                    <input type="radio" name="question_{{ q.id }}" id="q{{ q.id }}_d" value="D" class="form-check-input mt-1" onchange="onAnswerSelected({{ loop.index }})">
+                                    <div class="choice-content text-secondary small">
+                                        <b class="text-white me-2">D.</b> {{ q.option_d }}
+                                    </div>
+                                </label>
+                            </div>
+
+                            <!-- Bottom Action Navigation -->
+                            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-3 border-top border-secondary border-opacity-10">
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-glass btn-sm" onclick="clearSelection({{ loop.index }}, {{ q.id }})">
+                                        <i class="fa-solid fa-eraser me-1"></i> Clear
+                                    </button>
+                                    <button type="button" class="btn btn-outline-warning btn-sm" onclick="toggleFlag({{ loop.index }})">
+                                        <i class="fa-solid fa-flag me-1"></i> <span id="flagText-{{ loop.index }}">Flag for Review</span>
+                                    </button>
+                                </div>
+
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-glass btn-sm" onclick="navigateQuestion({{ loop.index - 1 }})" {% if loop.first %}disabled{% endif %}>
+                                        <i class="fa-solid fa-chevron-left me-1"></i> Previous
+                                    </button>
+                                    <button type="button" class="btn btn-cyan btn-sm" onclick="navigateQuestion({{ loop.index + 1 }})" {% if loop.last %}disabled{% endif %}>
+                                        Next <i class="fa-solid fa-chevron-right ms-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Question Palette Column -->
+            <div class="col-lg-4">
+                <div class="glass-card p-4 sticky-top" style="top: 155px;">
+                    <h6 class="text-white fw-bold mb-3 d-flex align-items-center justify-content-between">
+                        <span><i class="fa-solid fa-table-cells text-cyan me-2"></i> Question Palette</span>
+                        <span class="text-muted small"><span id="answeredCount">0</span>/{{ questions|length }} Answered</span>
+                    </h6>
+
+                    <div class="d-flex flex-wrap gap-2 mb-4" id="paletteGrid">
+                        {% for q in questions %}
+                            <div class="palette-btn {% if loop.first %}current{% endif %}" id="pbtn-{{ loop.index }}" onclick="navigateQuestion({{ loop.index }})">
+                                {{ loop.index }}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="small text-muted border-top border-secondary border-opacity-10 pt-3">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="palette-btn answered" style="width: 22px; height: 22px; font-size: 0.65rem;">✓</span>
+                            <span>Answered</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <span class="palette-btn flagged" style="width: 22px; height: 22px; font-size: 0.65rem;">⚑</span>
+                            <span>Marked for Review</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="palette-btn" style="width: 22px; height: 22px; font-size: 0.65rem;">•</span>
+                            <span>Not Answered</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-cyan w-100" onclick="confirmSubmit()">
+                        <i class="fa-solid fa-check-circle me-1"></i> Finish & View Score
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+let totalSeconds = {{ test.duration_mins * 60 }};
+let elapsedSeconds = 0;
+let currentQuestionIndex = 1;
+const totalQuestions = {{ questions|length }};
+const flaggedQuestions = new Set();
+const answeredQuestions = new Set();
+
+// Countdown Timer
+const timerInterval = setInterval(() => {
+    elapsedSeconds++;
+    document.getElementById('timeTakenSeconds').value = elapsedSeconds;
+
+    const remaining = totalSeconds - elapsedSeconds;
+    if (remaining <= 0) {
+        clearInterval(timerInterval);
+        alert('Time is up! Submitting your test responses now.');
+        document.getElementById('testForm').submit();
+        return;
+    }
+
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    document.getElementById('timerDisplay').textContent = 
+        `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+}, 1000);
+
+// Navigate to Question
+function navigateQuestion(index) {
+    if (index < 1 || index > totalQuestions) return;
+
+    // Hide old block
+    document.getElementById(`qblock-${currentQuestionIndex}`).classList.remove('active');
+    document.getElementById(`pbtn-${currentQuestionIndex}`).classList.remove('current');
+
+    // Show new block
+    currentQuestionIndex = index;
+    document.getElementById(`qblock-${currentQuestionIndex}`).classList.add('active');
+    document.getElementById(`pbtn-${currentQuestionIndex}`).classList.add('current');
+}
+
+// On Answer Radio selected
+function onAnswerSelected(index) {
+    answeredQuestions.add(index);
+    const pbtn = document.getElementById(`pbtn-${index}`);
+    pbtn.classList.add('answered');
+    document.getElementById('answeredCount').textContent = answeredQuestions.size;
+}
+
+// Clear Selection
+function clearSelection(index, qid) {
+    const radios = document.querySelectorAll(`input[name="question_${qid}"]`);
+    radios.forEach(r => r.checked = false);
+    answeredQuestions.delete(index);
+    const pbtn = document.getElementById(`pbtn-${index}`);
+    pbtn.classList.remove('answered');
+    document.getElementById('answeredCount').textContent = answeredQuestions.size;
+}
+
+// Toggle Flag
+function toggleFlag(index) {
+    const pbtn = document.getElementById(`pbtn-${index}`);
+    const flagText = document.getElementById(`flagText-${index}`);
+    if (flaggedQuestions.has(index)) {
+        flaggedQuestions.delete(index);
+        pbtn.classList.remove('flagged');
+        if (flagText) flagText.textContent = 'Flag for Review';
+    } else {
+        flaggedQuestions.add(index);
+        pbtn.classList.add('flagged');
+        if (flagText) flagText.textContent = 'Unflag Question';
+    }
+}
+
+// Confirm Submit
+function confirmSubmit() {
+    const unanswered = totalQuestions - answeredQuestions.size;
+    const msg = unanswered > 0 
+        ? `You have ${unanswered} unanswered question(s). Are you sure you want to finish and submit?`
+        : 'Are you sure you want to finalize your submission?';
+
+    if (confirm(msg)) {
+        clearInterval(timerInterval);
+        document.getElementById('testForm').submit();
+    }
+}
+</script>
+{% endblock %}

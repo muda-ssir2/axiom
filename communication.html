@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Communication Skills & Group Discussions – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">EXECUTIVE PRESENCE & SOFT SKILLS</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Corporate Communication & GD Mastery</h2>
+                <p class="text-secondary small mb-0">
+                    Master Group Discussions (GD), JAM rounds, technical storytelling, and professional email etiquette for corporate recruitment.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a href="#gdTopics" class="btn btn-cyan">
+                    <i class="fa-solid fa-comments me-1"></i> Practice GD Topics
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4 Pillars of Placement Communication -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-cyan mb-2"><i class="fa-solid fa-users-rectangle"></i></div>
+                <h5 class="text-white fw-bold mb-2">Group Discussions (GD)</h5>
+                <p class="text-muted small mb-0">
+                    Learn to initiate discussions, build upon points, mediate disagreements constructively, and summarize concisely without dominating.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-success mb-2"><i class="fa-solid fa-stopwatch-20"></i></div>
+                <h5 class="text-white fw-bold mb-2">JAM (Just A Minute)</h5>
+                <p class="text-muted small mb-0">
+                    Deliver a structured, impromptu 60-second speech on unexpected topics without filler words ("um", "ah") or repetitive loops.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-purple mb-2" style="color: #c084fc;"><i class="fa-solid fa-envelope-open-text"></i></div>
+                <h5 class="text-white fw-bold mb-2">Professional Emailing</h5>
+                <p class="text-muted small mb-0">
+                    Write crisp cold emails to hiring managers, accept placement offers gracefully, and navigate salary conversations with poise.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3">
+            <div class="glass-card p-4 h-100">
+                <div class="fs-2 text-warning mb-2"><i class="fa-solid fa-user-check"></i></div>
+                <h5 class="text-white fw-bold mb-2">Executive Presence</h5>
+                <p class="text-muted small mb-0">
+                    Maintain upright posture, eye contact on webcam, measured vocal tone, and confidence during high-stakes managerial interviews.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- High Frequency GD Topics with Speaking Points -->
+    <div id="gdTopics" class="glass-card p-4 p-md-5 mb-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h4 class="text-white fw-bold mb-0">
+                <i class="fa-solid fa-microphone text-cyan me-2"></i> Current Placement GD Topics & Structured Points
+            </h4>
+            <span class="badge badge-pill-cyan">2026 Edition</span>
+        </div>
+
+        <div class="row g-4">
+            {% for item in gd_topics %}
+                <div class="col-lg-6">
+                    <div class="p-4 rounded bg-secondary bg-opacity-10 h-100 border border-secondary border-opacity-10">
+                        <span class="badge bg-dark text-cyan small mb-2 border border-secondary border-opacity-25">{{ item.category }}</span>
+                        <h5 class="text-white fw-bold mb-3">{{ item.title }}</h5>
+                        
+                        <div class="text-muted small mb-2 fw-semibold">Key Discussion Angles & Data Points:</div>
+                        <ul class="list-unstyled text-secondary small mb-0">
+                            {% for pt in item.key_points %}
+                                <li class="mb-2 d-flex align-items-start gap-2">
+                                    <i class="fa-solid fa-chevron-right text-cyan mt-1" style="font-size: 0.75rem;"></i>
+                                    <span>{{ pt }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Do's and Don'ts Checklist -->
+    <div class="glass-card p-4 p-md-5">
+        <h4 class="text-white fw-bold mb-4">Group Discussion Golden Rules</h4>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-success bg-opacity-10 border border-success border-opacity-25 h-100">
+                    <h6 class="text-success fw-bold mb-3"><i class="fa-solid fa-circle-check me-2"></i> What Evaluators Love (Do's)</h6>
+                    <ul class="list-unstyled text-secondary small mb-0">
+                        <li class="mb-2">✓ Listen actively when others are speaking and take brief notes.</li>
+                        <li class="mb-2">✓ Acknowledge previous speakers: "Building on what Sneha mentioned..."</li>
+                        <li class="mb-2">✓ Support arguments with verified facts, market data, and tech statistics.</li>
+                        <li class="mb-2">✓ Gently bring quieter participants into the conversation.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="p-3 rounded bg-danger bg-opacity-10 border border-danger border-opacity-25 h-100">
+                    <h6 class="text-danger fw-bold mb-3"><i class="fa-solid fa-circle-xmark me-2"></i> What Causes Immediate Elimination (Don'ts)</h6>
+                    <ul class="list-unstyled text-secondary small mb-0">
+                        <li class="mb-2">✗ Shouting or interrupting aggressively to claim speaking time.</li>
+                        <li class="mb-2">✗ Making personal remarks or attacking someone's opinion.</li>
+                        <li class="mb-2">✗ Deviating into irrelevant personal anecdotes.</li>
+                        <li class="mb-2">✗ Remaining completely silent for the entire 15 minutes.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

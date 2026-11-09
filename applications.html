@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Candidate Applications – AXIOMPATH Admin{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-5 py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">RECRUITMENT PIPELINE MANAGEMENT</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Candidate Applications Review</h2>
+                <p class="text-secondary small mb-0">
+                    Review candidate profiles, evaluate cover notes, update stage statuses, and dispatch shortlist feedback.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <span class="badge bg-secondary bg-opacity-25 text-white border border-secondary border-opacity-25 px-3 py-2">
+                    <span class="text-cyan fw-bold fs-6">{{ applications|length }}</span> Applications Filtered
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filter Pills -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        {% for st in statuses %}
+            <a href="{{ url_for('admin.applications', status=st) }}" class="btn btn-sm {% if selected_status == st %}btn-cyan{% else %}btn-glass text-secondary{% endif %}">
+                {{ st }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Applications Table -->
+    <div class="glass-card p-4">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                <thead>
+                    <tr class="text-muted small text-uppercase">
+                        <th class="bg-transparent border-secondary border-opacity-10">#</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Candidate</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Applied Opening</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Cover Note</th>
+                        <th class="bg-transparent border-secondary border-opacity-10">Current Status</th>
+                        <th class="bg-transparent border-secondary border-opacity-10 text-end">Update Pipeline Stage</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                        <tr>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle text-muted small">
+                                #{{ app.id }}
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                <div class="fw-bold text-white">{{ app.applicant.name }}</div>
+                                <span class="text-muted small">{{ app.applicant.email }}</span><br>
+                                <span class="text-cyan small">{{ app.applicant.profile.college if app.applicant.profile else 'Student' }}</span>
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                <div class="text-white fw-bold">{{ app.job.title }}</div>
+                                <span class="text-muted small">{{ app.job.company.name }} • {{ app.job.salary_display }}</span>
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle" style="max-width: 250px;">
+                                <div class="text-secondary small text-truncate" title="{{ app.cover_note }}">
+                                    {{ app.cover_note or 'No cover note provided.' }}
+                                </div>
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                {% if app.status == 'Interview Scheduled' %}
+                                    <span class="badge bg-warning bg-opacity-25 text-warning border border-warning border-opacity-50">Interview Scheduled</span>
+                                {% elif app.status == 'Offer Extended' %}
+                                    <span class="badge bg-success bg-opacity-25 text-success border border-success border-opacity-50">Offer Extended</span>
+                                {% elif app.status == 'Shortlisted' %}
+                                    <span class="badge bg-cyan bg-opacity-25 text-cyan border border-cyan border-opacity-50">Shortlisted</span>
+                                {% elif app.status == 'Rejected' %}
+                                    <span class="badge bg-danger bg-opacity-25 text-danger">Rejected</span>
+                                {% else %}
+                                    <span class="badge bg-secondary bg-opacity-25 text-info">{{ app.status }}</span>
+                                {% endif %}
+                                
+                                {% if app.admin_feedback %}
+                                    <div class="small text-muted mt-1 fst-italic">"{{ app.admin_feedback }}"</div>
+                                {% endif %}
+                            </td>
+                            <td class="bg-transparent border-secondary border-opacity-10 align-middle text-end">
+                                <form method="POST" action="{{ url_for('admin.update_application_status', app_id=app.id) }}" class="d-inline-flex gap-2 justify-content-end align-items-center">
+                                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                    <select name="status" class="form-select form-select-sm" style="width: 150px; font-size: 0.8rem;">
+                                        <option value="Applied" {% if app.status == 'Applied' %}selected{% endif %}>Applied</option>
+                                        <option value="Under Review" {% if app.status == 'Under Review' %}selected{% endif %}>Under Review</option>
+                                        <option value="Shortlisted" {% if app.status == 'Shortlisted' %}selected{% endif %}>Shortlisted</option>
+                                        <option value="Interview Scheduled" {% if app.status == 'Interview Scheduled' %}selected{% endif %}>Interview Scheduled</option>
+                                        <option value="Offer Extended" {% if app.status == 'Offer Extended' %}selected{% endif %}>Offer Extended</option>
+                                        <option value="Rejected" {% if app.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                                    </select>
+                                    <input type="text" name="admin_feedback" class="form-control form-control-sm" placeholder="Feedback..." style="width: 140px; font-size: 0.8rem;" value="{{ app.admin_feedback or '' }}">
+                                    <button type="submit" class="btn btn-cyan btn-sm py-1 px-2" style="font-size: 0.8rem;">
+                                        Save
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

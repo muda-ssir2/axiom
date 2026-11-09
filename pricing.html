@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Membership & Plans – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center max-w-800 mx-auto mb-5">
+        <div class="badge-pill-cyan mb-3">TRANSPARENT VALUE</div>
+        <h1 class="display-5 fw-extrabold text-white mb-3">
+            Choose Your <span class="text-gradient-cyan">Placement Acceleration</span> Plan
+        </h1>
+        <p class="lead text-secondary">
+            Every plan gives you direct access to test simulations and job discovery. Upgrade when you need deep diagnostic analytics and mock interviews.
+        </p>
+    </div>
+
+    <!-- Pricing Grid -->
+    <div class="row g-4 align-items-center mb-5">
+        <!-- Free Tier -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 p-md-5">
+                <h4 class="text-white fw-bold mb-1">Aspire Free</h4>
+                <p class="text-muted small">Essential foundational practice for college juniors & freshers.</p>
+                <div class="my-4">
+                    <span class="display-5 fw-extrabold text-white">₹0</span>
+                    <span class="text-muted small">/ forever</span>
+                </div>
+                <ul class="list-unstyled text-muted small mb-4">
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> 10 Aptitude Practice Tests</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Browse All Campus Job Vacancies</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Basic ATS Resume Builder</li>
+                    <li class="mb-3 d-flex align-items-center gap-2 text-decoration-line-through text-muted"><i class="fa-solid fa-xmark"></i> Company-Specific Mocks</li>
+                    <li class="mb-3 d-flex align-items-center gap-2 text-decoration-line-through text-muted"><i class="fa-solid fa-xmark"></i> Interactive Mock Simulator</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-cyan w-100 py-2">Get Started Free</a>
+            </div>
+        </div>
+
+        <!-- Pro Accelerator (Featured) -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 p-md-5 border-cyan position-relative shadow-cyan" style="background: rgba(15, 23, 42, 0.98); transform: scale(1.04);">
+                <div class="position-absolute top-0 end-0 bg-cyan text-dark fw-bold px-3 py-1 rounded-bottom-start small">
+                    RECOMMENDED BY MENTORS
+                </div>
+                <h4 class="text-white fw-bold mb-1">Axiom Accelerator</h4>
+                <p class="text-muted small">Complete preparation suite for product and unicorn tech drives.</p>
+                <div class="my-4">
+                    <span class="display-5 fw-extrabold text-cyan">₹1,499</span>
+                    <span class="text-muted small">/ 6 months</span>
+                </div>
+                <ul class="list-unstyled text-secondary small mb-4">
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Unlimited Aptitude & CS Mocks</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> 1-Click Verified Job Applications</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Full Resume Builder & PDF Generation</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> TCS, Infosys, Razorpay Mock Packs</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Interactive Mock Simulator & Answer Analysis</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Diagnostic Skill Radar Charts</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-cyan w-100 py-2 fs-6">Enroll in Accelerator</a>
+            </div>
+        </div>
+
+        <!-- Elite Tier -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 p-md-5">
+                <h4 class="text-white fw-bold mb-1">Achiever Pass</h4>
+                <p class="text-muted small">Includes 1-on-1 mentorship, mock interviews, and code reviews.</p>
+                <div class="my-4">
+                    <span class="display-5 fw-extrabold text-white">₹3,999</span>
+                    <span class="text-muted small">/ 12 months</span>
+                </div>
+                <ul class="list-unstyled text-muted small mb-4">
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Everything in Pro Accelerator</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> 2 Live 1-on-1 Mocks with SDE Mentors</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> Direct Hiring Referral Network</li>
+                    <li class="mb-3 d-flex align-items-center gap-2"><i class="fa-solid fa-check text-cyan"></i> In-depth GitHub & Project Architecture Review</li>
+                </ul>
+                <a href="{{ url_for('auth.register') }}" class="btn btn-outline-cyan w-100 py-2">Join Achiever Elite</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

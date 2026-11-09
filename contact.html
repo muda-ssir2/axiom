@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Contact & Student Support – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-5 align-items-center">
+        <!-- Contact Information Column -->
+        <div class="col-lg-5">
+            <div class="badge-pill-cyan mb-3">GET IN TOUCH</div>
+            <h1 class="display-6 fw-bold text-white mb-3">We're Here to Accelerate Your Career</h1>
+            <p class="text-secondary mb-4">
+                Have questions about our campus placement roadmap, university tie-ups, or recruiter partnerships? Reach out to our placement advisory team.
+            </p>
+
+            <div class="d-flex flex-column gap-3 mb-4">
+                <div class="glass-card p-3 d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-cyan text-dark d-flex align-items-center justify-content-center p-3" style="width: 44px; height: 44px;">
+                        <i class="fa-solid fa-envelope fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Support Email</div>
+                        <a href="mailto:support@axiompath.com" class="text-white fw-bold">support@axiompath.com</a>
+                    </div>
+                </div>
+
+                <div class="glass-card p-3 d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-success text-dark d-flex align-items-center justify-content-center p-3" style="width: 44px; height: 44px;">
+                        <i class="fa-solid fa-location-dot fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Innovation Hub HQ</div>
+                        <span class="text-white fw-bold">Koramangala, Bengaluru, Karnataka, India</span>
+                    </div>
+                </div>
+
+                <div class="glass-card p-3 d-flex align-items-center gap-3">
+                    <div class="rounded-circle bg-warning text-dark d-flex align-items-center justify-content-center p-3" style="width: 44px; height: 44px;">
+                        <i class="fa-solid fa-clock fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Placement Advisory Hours</div>
+                        <span class="text-white fw-bold">Monday – Saturday, 9:00 AM – 7:00 PM IST</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form Column -->
+        <div class="col-lg-7">
+            <div class="glass-card p-4 p-md-5">
+                <h4 class="text-white fw-bold mb-1">Send a Direct Message</h4>
+                <p class="text-muted small mb-4">Our campus recruitment counselors respond within 24 business hours.</p>
+
+                <form method="POST" action="{{ url_for('main.contact') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label" for="name">Your Full Name</label>
+                            {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="e.g. Rahul Sharma") }}
+                            {% for err in form.name.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="email">Email Address</label>
+                            {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="rahul@college.edu") }}
+                            {% for err in form.email.errors %}
+                                <div class="invalid-feedback">{{ err }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="subject">Subject / Inquiry Type</label>
+                        {{ form.subject(class="form-control" + (" is-invalid" if form.subject.errors else ""), placeholder="e.g. Question regarding placement roadmap / recruiter partnership") }}
+                        {% for err in form.subject.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label" for="message">Message Details</label>
+                        {{ form.message(class="form-control" + (" is-invalid" if form.message.errors else ""), rows="5", placeholder="Please describe how we can assist you...") }}
+                        {% for err in form.message.errors %}
+                            <div class="invalid-feedback">{{ err }}</div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-cyan w-100 py-2 fs-6">
+                        <i class="fa-solid fa-paper-plane me-2"></i> Submit Inquiry
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

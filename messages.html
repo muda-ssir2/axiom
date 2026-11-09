@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}User Inquiries & Messages – AXIOMPATH Admin{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="badge-pill-cyan mb-2">USER SUPPORT & INQUIRIES</div>
+        <h2 class="display-6 fw-bold text-white mb-1">Contact Messages & Inquiries</h2>
+        <p class="text-secondary small mb-0">Review questions submitted by aspiring students, recruiters, and placement officers.</p>
+    </div>
+
+    <!-- Messages Table -->
+    <div class="glass-card p-4 p-md-5">
+        {% if messages %}
+            <div class="table-responsive">
+                <table class="table table-dark table-hover mb-0" style="background: transparent;">
+                    <thead>
+                        <tr class="text-muted small text-uppercase">
+                            <th class="bg-transparent border-secondary border-opacity-10">Sender</th>
+                            <th class="bg-transparent border-secondary border-opacity-10">Subject</th>
+                            <th class="bg-transparent border-secondary border-opacity-10">Message Body</th>
+                            <th class="bg-transparent border-secondary border-opacity-10">Date Received</th>
+                            <th class="bg-transparent border-secondary border-opacity-10">Status</th>
+                            <th class="bg-transparent border-secondary border-opacity-10 text-end">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for msg in messages %}
+                            <tr>
+                                <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                    <div class="fw-bold text-white">{{ msg.name }}</div>
+                                    <span class="text-muted small">{{ msg.email }}</span>
+                                </td>
+                                <td class="bg-transparent border-secondary border-opacity-10 align-middle text-cyan fw-semibold">
+                                    {{ msg.subject }}
+                                </td>
+                                <td class="bg-transparent border-secondary border-opacity-10 align-middle text-secondary small" style="max-width: 300px;">
+                                    {{ msg.message }}
+                                </td>
+                                <td class="bg-transparent border-secondary border-opacity-10 align-middle text-muted small">
+                                    {{ msg.created_at.strftime('%d %b %Y, %H:%M') }}
+                                </td>
+                                <td class="bg-transparent border-secondary border-opacity-10 align-middle">
+                                    {% if msg.is_resolved %}
+                                        <span class="badge bg-success bg-opacity-25 text-success">Resolved</span>
+                                    {% else %}
+                                        <span class="badge bg-warning bg-opacity-25 text-warning">Pending</span>
+                                    {% endif %}
+                                </td>
+                                <td class="bg-transparent border-secondary border-opacity-10 align-middle text-end">
+                                    <form method="POST" action="{{ url_for('admin.resolve_message', msg_id=msg.id) }}" class="d-inline">
+                                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                                        <button type="submit" class="btn btn-sm {% if msg.is_resolved %}btn-glass text-secondary{% else %}btn-cyan{% endif %} py-1 px-2" style="font-size: 0.75rem;">
+                                            {% if msg.is_resolved %}Mark Pending{% else %}Mark Resolved{% endif %}
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="text-center py-5 text-muted">
+                <i class="fa-regular fa-envelope-open fs-1 mb-3"></i>
+                <h5 class="text-white fw-bold">No Contact Inquiries</h5>
+                <p class="small">All submitted messages from the public contact page will show up here.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

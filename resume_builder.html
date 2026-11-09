@@ -1,0 +1,445 @@
+{% extends "base.html" %}
+
+{% block title %}Interactive Resume Builder & PDF Generator – AXIOMPATH{% endblock %}
+
+{% block extra_head %}
+<style>
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+        #resumePreviewSheet, #resumePreviewSheet * {
+            visibility: visible;
+        }
+        #resumePreviewSheet {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-lg-5 py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-7">
+                <div class="badge-pill-cyan mb-2">ATS-OPTIMIZED RESUME ENGINE</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Interactive Resume Builder</h2>
+                <p class="text-secondary small mb-0">
+                    Draft, customize, and export a clean, recruiter-approved software engineering resume with live instant preview.
+                </p>
+            </div>
+            <div class="col-lg-5 text-lg-end d-flex flex-wrap justify-content-lg-end gap-2">
+                <button type="button" class="btn btn-outline-cyan btn-sm" onclick="saveResume()">
+                    <i class="fa-solid fa-floppy-disk me-1"></i> Save Draft
+                </button>
+                <button type="button" class="btn btn-glass btn-sm" onclick="window.print()">
+                    <i class="fa-solid fa-print me-1"></i> Print / Browser PDF
+                </button>
+                {% if resume %}
+                    <a href="{{ url_for('resume.download_pdf', resume_id=resume.id) }}" class="btn btn-cyan btn-sm" id="btnServerPdf">
+                        <i class="fa-solid fa-file-pdf me-1"></i> Download Clean PDF
+                    </a>
+                {% else %}
+                    <button type="button" class="btn btn-cyan btn-sm" onclick="saveAndDownload()">
+                        <i class="fa-solid fa-file-pdf me-1"></i> Save & Download PDF
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 2-Column Split: Form Editor (Left) & Live Preview (Right) -->
+    <div class="row g-4">
+        <!-- Form Editor Column -->
+        <div class="col-lg-6">
+            <div class="glass-card p-4">
+                <!-- Tabs for Navigation -->
+                <ul class="nav nav-pills mb-4 gap-2 border-bottom border-secondary border-opacity-10 pb-3" id="resumeTabs" role="tablist">
+                    <li class="nav-item">
+                        <button class="nav-link active small py-1 px-3 btn-glass text-cyan" id="tab-personal" data-bs-toggle="pill" data-bs-target="#pane-personal" type="button">1. Personal</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link small py-1 px-3 btn-glass text-white" id="tab-edu" data-bs-toggle="pill" data-bs-target="#pane-edu" type="button">2. Education</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link small py-1 px-3 btn-glass text-white" id="tab-skills" data-bs-toggle="pill" data-bs-target="#pane-skills" type="button">3. Skills</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link small py-1 px-3 btn-glass text-white" id="tab-projects" data-bs-toggle="pill" data-bs-target="#pane-projects" type="button">4. Projects</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link small py-1 px-3 btn-glass text-white" id="tab-exp" data-bs-toggle="pill" data-bs-target="#pane-exp" type="button">5. Experience</button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="nav-link small py-1 px-3 btn-glass text-white" id="tab-achieve" data-bs-toggle="pill" data-bs-target="#pane-achieve" type="button">6. Achievements</button>
+                    </li>
+                </ul>
+
+                <form id="resumeForm">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="tab-content" id="resumeTabContent">
+                        <!-- PANE 1: PERSONAL -->
+                        <div class="tab-pane fade show active" id="pane-personal">
+                            <h5 class="text-white fw-bold mb-3">Contact & Identity</h5>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Full Name</label>
+                                    <input type="text" class="form-control live-bind" id="inp_fullName" value="{{ initial_data.full_name }}" oninput="updateLivePreview()">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email Address</label>
+                                    <input type="email" class="form-control live-bind" id="inp_email" value="{{ initial_data.email }}" oninput="updateLivePreview()">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Phone Number</label>
+                                    <input type="text" class="form-control live-bind" id="inp_phone" value="{{ initial_data.phone }}" oninput="updateLivePreview()">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Current City, Country</label>
+                                    <input type="text" class="form-control live-bind" id="inp_location" value="{{ initial_data.location }}" oninput="updateLivePreview()">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">LinkedIn Profile URL</label>
+                                    <input type="text" class="form-control live-bind" id="inp_linkedin" value="{{ initial_data.linkedin }}" oninput="updateLivePreview()">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">GitHub Profile URL</label>
+                                    <input type="text" class="form-control live-bind" id="inp_github" value="{{ initial_data.github }}" oninput="updateLivePreview()">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Professional Summary</label>
+                                <textarea class="form-control live-bind" id="inp_summary" rows="3" oninput="updateLivePreview()">{{ initial_data.summary }}</textarea>
+                            </div>
+                        </div>
+
+                        <!-- PANE 2: EDUCATION -->
+                        <div class="tab-pane fade" id="pane-edu">
+                            <h5 class="text-white fw-bold mb-3">Academic Qualifications</h5>
+                            <div id="eduList">
+                                {% for edu in initial_data.education %}
+                                    <div class="p-3 rounded bg-secondary bg-opacity-10 mb-3 border border-secondary border-opacity-10 edu-item">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Degree & Branch</label>
+                                                <input type="text" class="form-control form-control-sm edu-degree" value="{{ edu.degree }}" oninput="updateLivePreview()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Institution / College</label>
+                                                <input type="text" class="form-control form-control-sm edu-inst" value="{{ edu.institution }}" oninput="updateLivePreview()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Year (e.g. 2022 - 2026)</label>
+                                                <input type="text" class="form-control form-control-sm edu-year" value="{{ edu.year }}" oninput="updateLivePreview()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">CGPA / Percentage</label>
+                                                <input type="text" class="form-control form-control-sm edu-score" value="{{ edu.score }}" oninput="updateLivePreview()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- PANE 3: SKILLS -->
+                        <div class="tab-pane fade" id="pane-skills">
+                            <h5 class="text-white fw-bold mb-3">Technical Skills & Tooling</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Skills (Comma-separated list)</label>
+                                <textarea class="form-control live-bind" id="inp_skills" rows="4" oninput="updateLivePreview()">{{ initial_data.skills|join(', ') }}</textarea>
+                                <div class="form-text text-muted small">Example: Python, JavaScript, SQL, Flask, React, Docker, Data Structures, Git</div>
+                            </div>
+                        </div>
+
+                        <!-- PANE 4: PROJECTS -->
+                        <div class="tab-pane fade" id="pane-projects">
+                            <h5 class="text-white fw-bold mb-3">Technical Projects</h5>
+                            <div id="projectsList">
+                                {% for p in initial_data.projects %}
+                                    <div class="p-3 rounded bg-secondary bg-opacity-10 mb-3 border border-secondary border-opacity-10 proj-item">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Project Title</label>
+                                                <input type="text" class="form-control form-control-sm proj-title" value="{{ p.title }}" oninput="updateLivePreview()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Technologies Used</label>
+                                                <input type="text" class="form-control form-control-sm proj-tech" value="{{ p.tech }}" oninput="updateLivePreview()">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label small">Description & Key Contributions</label>
+                                            <textarea class="form-control form-control-sm proj-desc" rows="2" oninput="updateLivePreview()">{{ p.description }}</textarea>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- PANE 5: EXPERIENCE -->
+                        <div class="tab-pane fade" id="pane-exp">
+                            <h5 class="text-white fw-bold mb-3">Internships & Work Experience</h5>
+                            <div id="expList">
+                                {% for e in initial_data.experience %}
+                                    <div class="p-3 rounded bg-secondary bg-opacity-10 mb-3 border border-secondary border-opacity-10 exp-item">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Job Title / Role</label>
+                                                <input type="text" class="form-control form-control-sm exp-role" value="{{ e.role }}" oninput="updateLivePreview()">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Company Name</label>
+                                                <input type="text" class="form-control form-control-sm exp-company" value="{{ e.company }}" oninput="updateLivePreview()">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small">Duration (e.g. May 2025 - July 2025)</label>
+                                                <input type="text" class="form-control form-control-sm exp-duration" value="{{ e.duration }}" oninput="updateLivePreview()">
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="form-label small">Impact & Key Deliverables</label>
+                                            <textarea class="form-control form-control-sm exp-desc" rows="2" oninput="updateLivePreview()">{{ e.description }}</textarea>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- PANE 6: ACHIEVEMENTS -->
+                        <div class="tab-pane fade" id="pane-achieve">
+                            <h5 class="text-white fw-bold mb-3">Certifications & Achievements</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Certifications (One per line)</label>
+                                <textarea class="form-control live-bind" id="inp_certs" rows="3" oninput="updateLivePreview()">{{ initial_data.certifications|join('\n') }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Key Achievements & Hackathons (One per line)</label>
+                                <textarea class="form-control live-bind" id="inp_achieve" rows="3" oninput="updateLivePreview()">{{ initial_data.achievements|join('\n') }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Live Preview Column -->
+        <div class="col-lg-6">
+            <div class="sticky-top" style="top: 85px;">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="text-muted small"><i class="fa-solid fa-eye text-cyan me-1"></i> Live Real-Time ATS Sheet Preview</span>
+                    <span class="badge bg-secondary text-cyan small">Template: Tech Minimalist</span>
+                </div>
+
+                <!-- Printable Resume Preview Sheet -->
+                <div class="resume-preview-sheet" id="resumePreviewSheet">
+                    <h1 id="prev_name">Rahul Sharma</h1>
+                    <div class="text-muted small mb-2" id="prev_contact">
+                        rahul.sharma@axiompath.com | +91 98765 43210 | Bengaluru, India | GitHub | LinkedIn
+                    </div>
+
+                    <div class="resume-section-title">Professional Summary</div>
+                    <p class="small mb-3 text-secondary" id="prev_summary" style="line-height: 1.5;">
+                        Passionate software engineer with hands-on experience in full-stack web development, Python, and scalable architecture.
+                    </p>
+
+                    <div class="resume-section-title">Technical Skills</div>
+                    <p class="small mb-3 text-dark fw-medium" id="prev_skills">
+                        Python, JavaScript, SQL, Flask, React, Data Structures & Algorithms, Git, Docker
+                    </p>
+
+                    <div class="resume-section-title">Education</div>
+                    <div id="prev_education" class="mb-3"></div>
+
+                    <div class="resume-section-title">Projects</div>
+                    <div id="prev_projects" class="mb-3"></div>
+
+                    <div class="resume-section-title">Experience & Internships</div>
+                    <div id="prev_experience" class="mb-3"></div>
+
+                    <div class="resume-section-title">Certifications & Achievements</div>
+                    <div id="prev_achievements" class="mb-0"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function updateLivePreview() {
+    // 1. Contact
+    const name = document.getElementById('inp_fullName').value || 'Candidate Name';
+    const email = document.getElementById('inp_email').value || '';
+    const phone = document.getElementById('inp_phone').value || '';
+    const loc = document.getElementById('inp_location').value || '';
+    const github = document.getElementById('inp_github').value || '';
+    const linkedin = document.getElementById('inp_linkedin').value || '';
+
+    document.getElementById('prev_name').textContent = name;
+    const parts = [email, phone, loc, github, linkedin].filter(Boolean);
+    document.getElementById('prev_contact').textContent = parts.join(' | ');
+
+    // 2. Summary
+    document.getElementById('prev_summary').textContent = document.getElementById('inp_summary').value;
+
+    // 3. Skills
+    document.getElementById('prev_skills').textContent = document.getElementById('inp_skills').value;
+
+    // 4. Education
+    const eduList = document.getElementById('prev_education');
+    eduList.innerHTML = '';
+    document.querySelectorAll('.edu-item').forEach(item => {
+        const deg = item.querySelector('.edu-degree').value;
+        const inst = item.querySelector('.edu-inst').value;
+        const yr = item.querySelector('.edu-year').value;
+        const score = item.querySelector('.edu-score').value;
+        if (deg || inst) {
+            const div = document.createElement('div');
+            div.className = 'small mb-1';
+            div.innerHTML = `<b>${deg}</b> - ${inst} <span class="text-muted float-end">${yr} ${score ? '| ' + score : ''}</span>`;
+            eduList.appendChild(div);
+        }
+    });
+
+    // 5. Projects
+    const projList = document.getElementById('prev_projects');
+    projList.innerHTML = '';
+    document.querySelectorAll('.proj-item').forEach(item => {
+        const title = item.querySelector('.proj-title').value;
+        const tech = item.querySelector('.proj-tech').value;
+        const desc = item.querySelector('.proj-desc').value;
+        if (title) {
+            const div = document.createElement('div');
+            div.className = 'small mb-2';
+            div.innerHTML = `<b>${title}</b> ${tech ? '<i class="text-muted">(' + tech + ')</i>' : ''}<br><span class="text-secondary">• ${desc}</span>`;
+            projList.appendChild(div);
+        }
+    });
+
+    // 6. Experience
+    const expList = document.getElementById('prev_experience');
+    expList.innerHTML = '';
+    document.querySelectorAll('.exp-item').forEach(item => {
+        const role = item.querySelector('.exp-role').value;
+        const comp = item.querySelector('.exp-company').value;
+        const duration = item.querySelector('.exp-duration').value;
+        const desc = item.querySelector('.exp-desc').value;
+        if (role || comp) {
+            const div = document.createElement('div');
+            div.className = 'small mb-2';
+            div.innerHTML = `<b>${role}</b> - ${comp} <span class="text-muted float-end">${duration}</span><br><span class="text-secondary">• ${desc}</span>`;
+            expList.appendChild(div);
+        }
+    });
+
+    // 7. Certifications & Achievements
+    const achList = document.getElementById('prev_achievements');
+    achList.innerHTML = '';
+    const certs = document.getElementById('inp_certs').value.split('\n').filter(Boolean);
+    const achs = document.getElementById('inp_achieve').value.split('\n').filter(Boolean);
+    [...certs, ...achs].forEach(line => {
+        const div = document.createElement('div');
+        div.className = 'small text-secondary mb-1';
+        div.textContent = `• ${line}`;
+        achList.appendChild(div);
+    });
+}
+
+async function saveResume() {
+    const payload = getPayload();
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+    try {
+        const res = await fetch('/resume-builder/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.status === 'success') {
+            alert('Resume saved successfully! You can now download the PDF.');
+            const btn = document.getElementById('btnServerPdf');
+            if (btn) btn.href = `/resume-builder/download/${data.resume_id}`;
+            return data.resume_id;
+        }
+    } catch (err) {
+        console.error('Failed to save resume:', err);
+        alert('Resume saved to local session.');
+    }
+}
+
+async function saveAndDownload() {
+    const resumeId = await saveResume();
+    if (resumeId) {
+        window.location.href = `/resume-builder/download/${resumeId}`;
+    }
+}
+
+function getPayload() {
+    const education = [];
+    document.querySelectorAll('.edu-item').forEach(item => {
+        education.push({
+            degree: item.querySelector('.edu-degree').value,
+            institution: item.querySelector('.edu-inst').value,
+            year: item.querySelector('.edu-year').value,
+            score: item.querySelector('.edu-score').value
+        });
+    });
+
+    const projects = [];
+    document.querySelectorAll('.proj-item').forEach(item => {
+        projects.push({
+            title: item.querySelector('.proj-title').value,
+            tech: item.querySelector('.proj-tech').value,
+            description: item.querySelector('.proj-desc').value
+        });
+    });
+
+    const experience = [];
+    document.querySelectorAll('.exp-item').forEach(item => {
+        experience.push({
+            role: item.querySelector('.exp-role').value,
+            company: item.querySelector('.exp-company').value,
+            duration: item.querySelector('.exp-duration').value,
+            description: item.querySelector('.exp-desc').value
+        });
+    });
+
+    const skills = document.getElementById('inp_skills').value.split(',').map(s => s.trim()).filter(Boolean);
+    const certs = document.getElementById('inp_certs').value.split('\n').map(s => s.trim()).filter(Boolean);
+    const achievements = document.getElementById('inp_achieve').value.split('\n').map(s => s.trim()).filter(Boolean);
+
+    return {
+        full_name: document.getElementById('inp_fullName').value,
+        email: document.getElementById('inp_email').value,
+        phone: document.getElementById('inp_phone').value,
+        location: document.getElementById('inp_location').value,
+        github: document.getElementById('inp_github').value,
+        linkedin: document.getElementById('inp_linkedin').value,
+        summary: document.getElementById('inp_summary').value,
+        education_json: JSON.stringify(education),
+        projects_json: JSON.stringify(projects),
+        experience_json: JSON.stringify(experience),
+        skills_json: JSON.stringify(skills),
+        certifications_json: JSON.stringify(certs),
+        achievements_json: JSON.stringify(achievements)
+    };
+}
+
+document.addEventListener('DOMContentLoaded', updateLivePreview);
+</script>
+{% endblock %}

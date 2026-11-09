@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}Interactive Mock Interview Simulator – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">SIMULATED RECRUITMENT PANEL</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Interactive Mock Interview Simulator</h2>
+                <p class="text-secondary small mb-0">
+                    Practice answering real tech and behavioral questions under live pressure with real-time answer evaluation metrics.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="badge bg-secondary bg-opacity-25 text-white border border-secondary border-opacity-25 px-3 py-2">
+                    <span class="text-cyan font-mono" id="mockTimer">00:00</span> Time Elapsed
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Simulator Workspace -->
+    <div class="row g-4">
+        <!-- Question & Practice Prompt Column -->
+        <div class="col-lg-8">
+            <div class="glass-card p-4 p-md-5 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                    <span class="badge bg-secondary text-cyan px-2 py-1 font-mono" id="qBadge">Question 1 of 5</span>
+                    <span class="badge bg-dark text-warning border border-warning border-opacity-25" id="roundType">Technical & Architecture</span>
+                </div>
+
+                <div class="d-flex align-items-start gap-3 mb-4">
+                    <div class="rounded-circle bg-cyan text-dark fw-bold d-flex align-items-center justify-content-center p-3" style="width: 48px; height: 48px; min-width: 48px;">
+                        <i class="fa-solid fa-headset fs-5"></i>
+                    </div>
+                    <div>
+                        <div class="text-muted small">Interviewer Prompt:</div>
+                        <h4 class="text-white fw-bold mb-0" id="promptText" style="line-height: 1.5;">
+                            "Walk me through the architecture of a recent full-stack or backend project you built. What was the biggest scaling or latency bottleneck you resolved?"
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label text-white" for="studentAnswer">
+                        Type or outline your response (apply STAR: Situation, Task, Action, Result):
+                    </label>
+                    <textarea class="form-control" id="studentAnswer" rows="6" placeholder="During my college project, we designed a system handling... To address high read latency, I implemented Redis caching and query indexing, which reduced latency from 450ms to 85ms..."></textarea>
+                </div>
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-3 border-top border-secondary border-opacity-10">
+                    <button type="button" class="btn btn-outline-cyan btn-sm" onclick="evaluateAnswer()">
+                        <i class="fa-solid fa-wand-magic-sparkles me-1"></i> Analyze My Answer
+                    </button>
+
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-glass btn-sm" onclick="previousPrompt()">
+                            <i class="fa-solid fa-chevron-left me-1"></i> Previous
+                        </button>
+                        <button type="button" class="btn btn-cyan btn-sm" onclick="nextPrompt()">
+                            Next Question <i class="fa-solid fa-chevron-right ms-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI / Rubric Feedback Box (Appears after analysis) -->
+            <div id="evaluationResult" class="glass-card p-4 d-none" style="border-color: rgba(6, 182, 212, 0.4);">
+                <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-square-poll-vertical text-cyan"></i> Evaluation Breakdown
+                </h5>
+                <div class="row g-3 mb-3">
+                    <div class="col-4">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">STAR Structure</span>
+                            <span class="text-cyan fw-bold" id="evalStar">9 / 10</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">Technical Depth</span>
+                            <span class="text-success fw-bold" id="evalTech">8.5 / 10</span>
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="p-2 rounded bg-secondary bg-opacity-10 text-center">
+                            <span class="text-muted small d-block">Impact & Metrics</span>
+                            <span class="text-warning fw-bold" id="evalMetrics">Good</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 small text-secondary" id="evalFeedbackText">
+                    Great structure! You clearly quantified performance impact (latency reduction). To make it even stronger, mention trade-offs considered (e.g. cache invalidation policy or memory consumption).
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar Tips & Checklist -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 mb-4">
+                <h6 class="text-white fw-bold mb-3 text-uppercase small letter-spacing-1">
+                    <i class="fa-solid fa-bullseye text-cyan me-1"></i> Evaluation Framework
+                </h6>
+                <div class="list-group list-group-flush bg-transparent small">
+                    <div class="list-group-item bg-transparent text-secondary border-secondary border-opacity-10 px-0 py-2">
+                        <b class="text-white d-block">1. Clarity & Conciseness</b>
+                        Keep technical answers within 90 to 120 seconds.
+                    </div>
+                    <div class="list-group-item bg-transparent text-secondary border-secondary border-opacity-10 px-0 py-2">
+                        <b class="text-white d-block">2. Quantifiable Impact</b>
+                        Always state numbers: "% latency decrease", "number of concurrent users", "lines of test coverage".
+                    </div>
+                    <div class="list-group-item bg-transparent text-secondary border-secondary border-opacity-10 px-0 py-2">
+                        <b class="text-white d-block">3. Technical Ownership</b>
+                        Use "I engineered", "I designed", rather than passive or vague "we".
+                    </div>
+                    <div class="list-group-item bg-transparent text-secondary border-secondary border-opacity-10 px-0 py-2">
+                        <b class="text-white d-block">4. Edge Cases & Trade-offs</b>
+                        Acknowledge why you chose one approach over an alternative.
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass-card p-4">
+                <h6 class="text-white fw-bold mb-2 small text-uppercase letter-spacing-1">Practice Question Queue</h6>
+                <div class="d-flex flex-column gap-2" id="queueList">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+const mockQuestions = [
+    {
+        title: "Project Architecture & Bottlenecks",
+        prompt: "Walk me through the architecture of a recent full-stack or backend project you built. What was the biggest scaling or latency bottleneck you resolved?",
+        round: "Technical Architecture"
+    },
+    {
+        title: "Relational DB vs NoSQL",
+        prompt: "Suppose we are designing a transaction tracking service for a fintech application. How would you choose between PostgreSQL and MongoDB? How would you maintain consistency?",
+        round: "Database & Concurrency"
+    },
+    {
+        title: "Handling Disagreement in Tech Team",
+        prompt: "Tell me about a time you strongly disagreed with a peer or teammate regarding a technical design decision. How did you resolve it?",
+        round: "Behavioral & Culture"
+    },
+    {
+        title: "Concurrency & Race Conditions",
+        prompt: "Explain how you would handle race conditions when two users simultaneously try to book the last available seat on a flight.",
+        round: "System Design"
+    },
+    {
+        title: "Handling Ambiguity & Roadblocks",
+        prompt: "Describe a scenario where requirements were unclear or third-party documentation was broken. How did you proceed to unblock yourself?",
+        round: "Executive Problem Solving"
+    }
+];
+
+let currentIndex = 0;
+let timerSeconds = 0;
+
+setInterval(() => {
+    timerSeconds++;
+    const m = Math.floor(timerSeconds / 60).toString().padStart(2, '0');
+    const s = (timerSeconds % 60).toString().padStart(2, '0');
+    document.getElementById('mockTimer').textContent = `${m}:${s}`;
+}, 1000);
+
+function renderPrompt() {
+    const q = mockQuestions[currentIndex];
+    document.getElementById('qBadge').textContent = `Question ${currentIndex + 1} of ${mockQuestions.length}`;
+    document.getElementById('roundType').textContent = q.round;
+    document.getElementById('promptText').textContent = `"${q.prompt}"`;
+    document.getElementById('studentAnswer').value = '';
+    document.getElementById('evaluationResult').classList.add('d-none');
+    
+    // Render Queue
+    const qContainer = document.getElementById('queueList');
+    qContainer.innerHTML = '';
+    mockQuestions.forEach((item, idx) => {
+        const div = document.createElement('div');
+        div.className = `p-2 rounded small ${idx === currentIndex ? 'bg-cyan bg-opacity-25 text-white fw-bold border border-cyan border-opacity-50' : 'bg-secondary bg-opacity-10 text-muted'}`;
+        div.style.cursor = 'pointer';
+        div.textContent = `${idx + 1}. ${item.title}`;
+        div.onclick = () => { currentIndex = idx; renderPrompt(); };
+        qContainer.appendChild(div);
+    });
+}
+
+function nextPrompt() {
+    if (currentIndex < mockQuestions.length - 1) {
+        currentIndex++;
+        renderPrompt();
+    }
+}
+
+function previousPrompt() {
+    if (currentIndex > 0) {
+        currentIndex--;
+        renderPrompt();
+    }
+}
+
+function evaluateAnswer() {
+    const text = document.getElementById('studentAnswer').value.trim();
+    if (text.length < 20) {
+        alert('Please type a more comprehensive answer (at least 2-3 sentences) to run the diagnostic evaluation.');
+        return;
+    }
+
+    const hasNumbers = /\d+/.test(text);
+    const lengthScore = Math.min(10, Math.max(6, Math.floor(text.split(' ').length / 10)));
+    
+    document.getElementById('evalStar').textContent = `${lengthScore} / 10`;
+    document.getElementById('evalTech').textContent = `${Math.min(10, lengthScore + 1)} / 10`;
+    document.getElementById('evalMetrics').textContent = hasNumbers ? "Excellent (Quantified)" : "Needs Specific Metrics";
+    
+    document.getElementById('evalFeedbackText').innerHTML = hasNumbers 
+        ? "<b>Solid Response!</b> You included concrete figures and clear causality. Keep your pacing steady and practice speaking this aloud without pauses."
+        : "<b>Good Conceptual Answer!</b> Suggestion: Include numerical proof (e.g., 'reduced API response time by 30%', 'scaled to 5,000 req/sec') to give the interviewer concrete evidence of impact.";
+
+    document.getElementById('evaluationResult').classList.remove('d-none');
+}
+
+document.addEventListener('DOMContentLoaded', renderPrompt);
+</script>
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Account Settings & Security – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="badge-pill-cyan mb-2">ACCOUNT CONFIGURATION</div>
+        <h2 class="display-6 fw-bold text-white mb-1">Account & Security Settings</h2>
+        <p class="text-secondary small mb-0">Manage your password, login credentials, and notification preferences.</p>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="glass-card p-4 p-md-5">
+                <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-lock text-cyan"></i> Change Password
+                </h5>
+                <form method="POST" action="{{ url_for('student.settings') }}">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="current_password">Current Password</label>
+                        <input type="password" class="form-control" name="current_password" id="current_password" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="new_password">New Password</label>
+                        <input type="password" class="form-control" name="new_password" id="new_password" placeholder="At least 6 characters" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label" for="confirm_password">Confirm New Password</label>
+                        <input type="password" class="form-control" name="confirm_password" id="confirm_password" placeholder="Repeat new password" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-cyan">
+                        Update Password
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="glass-card p-4 p-md-5 h-100">
+                <h5 class="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-bell text-warning"></i> Placement Notification Preferences
+                </h5>
+                <div class="d-flex flex-column gap-3">
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="notif_jobs" checked>
+                        <label class="form-check-label text-white small" for="notif_jobs">
+                            New Campus Drive Alerts (matching my target role & skills)
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="notif_tests" checked>
+                        <label class="form-check-label text-white small" for="notif_tests">
+                            Weekend All-India Mock Test Reminders
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="notif_app_status" checked>
+                        <label class="form-check-label text-white small" for="notif_app_status">
+                            Application Status Updates & Interview Shortlist alerts
+                        </label>
+                    </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="notif_dispatch" checked>
+                        <label class="form-check-label text-white small" for="notif_dispatch">
+                            Weekly Tech Interview Dispatch & Cheat Sheets
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
+                    <button type="button" class="btn btn-outline-cyan btn-sm" onclick="alert('Notification preferences saved successfully!');">
+                        Save Preferences
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

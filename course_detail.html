@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.title }} – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Breadcrumb -->
+    <nav class="mb-4">
+        <ol class="breadcrumb text-muted small">
+            <li class="breadcrumb-item"><a href="{{ url_for('main.index') }}" class="text-muted">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('preparation.courses') }}" class="text-muted">Courses</a></li>
+            <li class="breadcrumb-item active text-cyan" aria-current="page">{{ course.title }}</li>
+        </ol>
+    </nav>
+
+    <!-- Header Banner -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <span class="badge bg-secondary bg-opacity-25 text-cyan border border-cyan border-opacity-25 mb-2">{{ course.category }} • {{ course.level }}</span>
+                <h2 class="display-6 fw-bold text-white mb-2">{{ course.title }}</h2>
+                <p class="text-secondary small mb-0">{{ course.description }}</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <div class="d-flex justify-content-lg-end gap-3 text-muted small">
+                    <span><i class="fa-solid fa-clock text-cyan me-1"></i> {{ course.duration_hours }}h Total</span>
+                    <span><i class="fa-solid fa-star text-warning me-1"></i> {{ course.rating }} ({{ course.enrolled_count }} students)</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2-Column: Current Lesson (Left) & Playlist (Right) -->
+    <div class="row g-4">
+        <div class="col-lg-8">
+            <div class="glass-card p-4 p-md-5 mb-4">
+                {% if current_lesson %}
+                    <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom border-secondary border-opacity-10">
+                        <span class="badge bg-secondary text-cyan px-2 py-1 font-mono">Module {{ current_lesson.order_num }} of {{ lessons|length }}</span>
+                        <span class="text-muted small"><i class="fa-solid fa-clock text-cyan me-1"></i> {{ current_lesson.duration_mins }} mins read & code</span>
+                    </div>
+
+                    <h3 class="text-white fw-bold mb-4">{{ current_lesson.title }}</h3>
+
+                    <div class="text-secondary mb-4" style="line-height: 1.8;">
+                        {{ current_lesson.content }}
+                    </div>
+
+                    {% if current_lesson.code_example %}
+                        <div class="mb-4">
+                            <h6 class="text-white fw-bold small text-uppercase letter-spacing-1 mb-2">Code Example & Implementation:</h6>
+                            <div class="p-3 rounded bg-dark border border-secondary border-opacity-25 font-mono text-cyan small" style="background: #060913 !important;">
+                                <pre class="mb-0"><code>{{ current_lesson.code_example }}</code></pre>
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    {% if current_lesson.key_takeaways %}
+                        <div class="p-3 rounded bg-secondary bg-opacity-10 border border-secondary border-opacity-10 mb-4">
+                            <h6 class="text-cyan fw-bold small mb-2"><i class="fa-solid fa-lightbulb me-1"></i> Key Placement Takeaways:</h6>
+                            <div class="text-secondary small" style="white-space: pre-line;">
+                                {{ current_lesson.key_takeaways }}
+                            </div>
+                        </div>
+                    {% endif %}
+
+                    <div class="pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-between">
+                        <a href="{{ url_for('preparation.courses') }}" class="btn btn-glass btn-sm">
+                            <i class="fa-solid fa-arrow-left me-1"></i> Course Catalog
+                        </a>
+                        <button type="button" class="btn btn-cyan btn-sm" onclick="alert('Module marked as completed! Points added to candidate profile.');">
+                            <i class="fa-solid fa-check-circle me-1"></i> Mark Lesson Completed
+                        </button>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No lesson content currently available for this course.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Course Playlist -->
+        <div class="col-lg-4">
+            <div class="glass-card p-4 sticky-top" style="top: 85px;">
+                <h6 class="text-white fw-bold mb-3 text-uppercase small letter-spacing-1">
+                    <i class="fa-solid fa-list-ol text-cyan me-2"></i> Course Syllabus & Lessons
+                </h6>
+
+                <div class="d-flex flex-column gap-2">
+                    {% for l in lessons %}
+                        <a href="{{ url_for('preparation.course_detail', slug=course.slug, lesson_id=l.id) }}" class="p-3 rounded text-decoration-none {% if current_lesson and current_lesson.id == l.id %}bg-cyan bg-opacity-25 text-white fw-bold border border-cyan border-opacity-50{% else %}bg-secondary bg-opacity-10 text-secondary hover-cyan border border-transparent{% endif %}">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="small">{{ l.order_num }}. {{ l.title }}</span>
+                                <span class="text-muted small" style="font-size: 0.75rem;">{{ l.duration_mins }}m</span>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+
+                <div class="mt-4 pt-3 border-top border-secondary border-opacity-10">
+                    <a href="{{ url_for('preparation.aptitude') }}" class="btn btn-outline-cyan btn-sm w-100">
+                        <i class="fa-solid fa-brain me-1"></i> Practice Related Test
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

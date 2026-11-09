@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Placement Preparation Courses – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <!-- Header -->
+    <div class="glass-panel p-4 mb-4">
+        <div class="row align-items-center g-3">
+            <div class="col-lg-8">
+                <div class="badge-pill-cyan mb-2">CURATED ROADMAPS</div>
+                <h2 class="display-6 fw-bold text-white mb-1">Placement Preparation Courses</h2>
+                <p class="text-secondary small mb-0">
+                    Comprehensive video and text masterclasses covering DSA, CS fundamentals, Full-Stack development, and interview loops.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <span class="badge bg-secondary bg-opacity-25 text-white border border-secondary border-opacity-25 px-3 py-2">
+                    <span class="text-cyan fw-bold fs-6">{{ courses|length }}</span> Courses Available
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Filters -->
+    <div class="d-flex flex-wrap gap-2 mb-4">
+        {% for cat in categories %}
+            <a href="{{ url_for('preparation.courses', category=cat) }}" class="btn btn-sm {% if selected_category == cat %}btn-cyan{% else %}btn-glass text-secondary{% endif %}">
+                {{ cat }}
+            </a>
+        {% endfor %}
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="row g-4">
+        {% for c in courses %}
+            <div class="col-lg-6">
+                <div class="glass-card p-4 h-100 d-flex flex-column justify-content-between position-relative">
+                    {% if c.is_popular %}
+                        <div class="position-absolute top-0 end-0 bg-cyan text-dark fw-bold px-3 py-1 rounded-bottom-start small" style="font-size: 0.75rem;">
+                            POPULAR
+                        </div>
+                    {% endif %}
+
+                    <div>
+                        <div class="d-flex align-items-center gap-3 mb-3">
+                            <div class="rounded-3 d-flex align-items-center justify-content-center text-white fs-4" style="width: 52px; height: 52px; background: {{ c.badge_color }};">
+                                <i class="fa-solid {{ c.icon }}"></i>
+                            </div>
+                            <div>
+                                <span class="badge bg-secondary bg-opacity-25 text-cyan small border border-cyan border-opacity-25">{{ c.category }}</span>
+                                <h5 class="text-white fw-bold mb-0 mt-1">
+                                    <a href="{{ url_for('preparation.course_detail', slug=c.slug) }}" class="text-white hover-cyan">{{ c.title }}</a>
+                                </h5>
+                            </div>
+                        </div>
+
+                        <p class="text-secondary small mb-3">
+                            {{ c.description }}
+                        </p>
+
+                        <div class="d-flex flex-wrap gap-3 text-muted small mb-3">
+                            <span><i class="fa-solid fa-clock text-cyan me-1"></i> {{ c.duration_hours }} Hours</span>
+                            <span><i class="fa-solid fa-users text-cyan me-1"></i> {{ c.enrolled_count }} Enrolled</span>
+                            <span><i class="fa-solid fa-star text-warning me-1"></i> {{ c.rating }} / 5.0</span>
+                            <span><i class="fa-solid fa-signal text-cyan me-1"></i> {{ c.level }}</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-top border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">{{ c.lessons.count() }} Core Modules</span>
+                        <a href="{{ url_for('preparation.course_detail', slug=c.slug) }}" class="btn btn-cyan btn-sm">
+                            Access Course <i class="fa-solid fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

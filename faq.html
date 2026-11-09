@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Frequently Asked Questions – AXIOMPATH{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center max-w-800 mx-auto mb-5">
+        <div class="badge-pill-cyan mb-3">HELP CENTER</div>
+        <h1 class="display-5 fw-extrabold text-white mb-3">Frequently Asked Questions</h1>
+        <p class="lead text-secondary">
+            Find answers to common questions about preparing for campus placements, test scoring, resumes, and applying to tech jobs.
+        </p>
+    </div>
+
+    <div class="max-w-800 mx-auto">
+        <div class="accordion accordion-flush" id="fullFaqAccordion">
+            <div class="accordion-item glass-card mb-3 border-0">
+                <h2 class="accordion-header">
+                    <button class="accordion-button bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#ffaq1">
+                        How does AXIOMPATH calculate aptitude test scores?
+                    </button>
+                </h2>
+                <div id="ffaq1" class="accordion-collapse collapse show" data-bs-parent="#fullFaqAccordion">
+                    <div class="accordion-body text-secondary small">
+                        Each question carries 2 to 3 marks. To emulate actual corporate test parameters (such as TCS NQT or Infosys test patterns), incorrect answers carry a 25% negative deduction penalty. Detailed answer explanations and score percentages are provided immediately upon test submission.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item glass-card mb-3 border-0">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#ffaq2">
+                        How do I export my resume as a PDF?
+                    </button>
+                </h2>
+                <div id="ffaq2" class="accordion-collapse collapse" data-bs-parent="#fullFaqAccordion">
+                    <div class="accordion-body text-secondary small">
+                        Navigate to the Resume Builder tab. As you fill out your education, projects, skills, and internships, the live preview sheet updates in real-time. You can save your draft to your account or click "Download Clean PDF" for a server-generated ReportLab document, or "Print / Browser PDF" to save directly from your browser.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item glass-card mb-3 border-0">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#ffaq3">
+                        Can colleges and universities partner with AXIOMPATH for training?
+                    </button>
+                </h2>
+                <div id="ffaq3" class="accordion-collapse collapse" data-bs-parent="#fullFaqAccordion">
+                    <div class="accordion-body text-secondary small">
+                        Yes! Training and Placement Cells (TPO) can partner with AXIOMPATH to provide batch-wide placement diagnostics, customized departmental mock coding tests, and campus drive management. Contact our university partnership team at support@axiompath.com.
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item glass-card mb-3 border-0">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed bg-transparent text-white fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#ffaq4">
+                        What tech stacks are most recommended for 2026 fresher hiring?
+                    </button>
+                </h2>
+                <div id="ffaq4" class="accordion-collapse collapse" data-bs-parent="#fullFaqAccordion">
+                    <div class="accordion-body text-secondary small">
+                        Based on our partner hiring metrics, Python, Java (Spring Boot), modern JavaScript/TypeScript (React), SQL with relational database optimization, Docker container fundamentals, and clean Data Structures & Algorithms are the top sought-after skills for software engineering roles.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
